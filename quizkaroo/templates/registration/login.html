@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login - Already Have an Account?</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    </head>
+
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            text-decoration: none;
+            color: black;
+          }
+        
+        
+          @media (min-width: 1000px) {
+        
+          body{
+            height: 100vh;
+            width: 100vw;
+        }
+          body::-webkit-scrollbar{
+            display: none;
+          }
+        
+          
+          #logo-container{
+            height: 4em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+          #logo-container>a{
+            height: 4em;
+          }
+          #logo-container>a>img{
+            height: 3em;
+            width: 3em;
+          }
+        
+          .navbar{
+            display: flex;
+            align-items: center;
+            padding: 1em 2em;
+            justify-content: space-between;
+            box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+        }
+        .container-fluid{
+            width: max-content;
+            margin: 0px;
+        }
+        
+        .navbar-login-button{
+        background-color: #222;
+        border-radius: 4px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.5;
+        margin: 0;
+        max-width: none;
+        min-height: 44px;
+        min-width: 10px;
+        outline: none;
+        overflow: hidden;
+        padding: 9px 20px 8px;
+        position: relative;
+        text-align: center;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 100%;
+        }
+        
+        .navbar-login-button:hover,
+        .navbar-login-button:focus {
+        opacity: .75;
+        }
+        
+        
+        
+        main{
+            width: 100vw;
+            /* border: 1px solid; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          #main-login-container{
+            width: 60%;
+            margin-top: 4em;
+            box-shadow: 0px 0px 2px rgba(0,0,0,0.2);
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2%;
+          }
+          #main-login-box{
+            width: 98%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+          }
+          
+          #loginbox-login-link{
+            /* border: 1px solid; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+          }
+          #loginbox-login-link>p, #loginbox-login-link>a{
+            font-family: "Bebas Neue", serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+            margin-left: 10px;
+          }
+          #loginbox-head-text{
+            /* border: 1px solid; */
+            font-size: 30px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 500;
+            font-style: normal;
+            letter-spacing: 2px;
+            margin-top: 1em;
+          
+          }
+          #login{
+            /* border: 1px solid; */
+            margin-top: 1em;
+          }
+          #login>form{
+            display: flex;
+            flex-direction: column;
+          }
+          #password-input, #email-input{
+            display: grid;
+            margin-bottom: 1em;
+          }
+          #password-input>label, #email-input>label{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+          }
+          #password-input>input, #email-input>input{
+            height: 2.5em;
+            border: 1px solid rgba(0,0,0,0.2);
+            outline: none;
+            width: 90%;
+            padding: 8px;
+            font-size: 15px;
+          }
+          #login-button-container{
+            border: 1px solid rgba(0,0,0,0.2);
+            margin-top: 2em;
+          
+          }
+          #submit-button{
+            height: 2em;
+            width: 100%;
+            outline: none;
+            color: rgba(0,0,0,0.2);
+            background-color: white;
+            border: 0px;
+            font-size: large;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 550;
+            font-style: normal;
+            letter-spacing: 1px;
+            cursor: pointer;
+          }
+          #submit-button.enabled {
+            cursor: pointer;
+            color: black;
+          }
+          #forgot-password-container{
+            width: max-content;
+          }
+          #forgot-password-text{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+            color: black;
+          }
+          #forgot-password-text:hover{
+            text-decoration: underline;
+          }
+          
+          #other-methods-container{
+            /* border: 1px solid; */
+            margin-top: 2em;
+          }
+          #other-methods-container>p{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+          }
+          #login-method-blocks-container{
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            /* border: 1px solid; */
+            margin-top: 1em;
+          }
+          .login-links{
+            height: 4em;
+            width: 4em;
+            padding: 1%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            transition: 100ms linear;
+            border-radius: 10px;
+            cursor: pointer;
+          }
+          .login-links:hover{
+            box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+            transform: scale(1.1);
+            transition: 100ms linear;
+          }
+          
+        }
+        
+        
+        @media (max-width: 999px) {
+        
+        
+          body{
+            height: max-content;
+            width: 100vw;
+            display: grid;
+            align-items: normal;
+            overflow: scroll;
+          }
+        
+          body::-webkit-scrollbar{
+            display: none;
+          }
+        
+           
+          #logo-container{
+            height: 4em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+          #logo-container>a{
+            height: 4em;
+          }
+          #logo-container>a>img{
+            height: 3em;
+            width: 3em;
+          }
+        
+          .navbar{
+            display: flex;
+            align-items: center;
+            padding: 1em 2em;
+            justify-content: space-between;
+            box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+        }
+        .container-fluid{
+            width: max-content;
+            margin: 0px;
+        }
+        
+        .navbar-login-button{
+        background-color: #222;
+        border-radius: 4px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.5;
+        margin: 0;
+        max-width: none;
+        min-height: 44px;
+        min-width: 10px;
+        outline: none;
+        overflow: hidden;
+        padding: 9px 20px 8px;
+        position: relative;
+        text-align: center;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 100%;
+        }
+        
+        .navbar-login-button:hover,
+        .navbar-login-button:focus {
+        opacity: .75;
+        }
+        
+        
+        main{
+          width: 100vw;
+          height: max-content;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        #main-login-container{
+          width: 100%;
+          margin-top: 4em;
+          box-shadow: 0px 0px px rgba(0,0,0,0.2);
+          background-color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2%;
+        }
+        #main-login-box{
+          width: 90%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+        }
+        
+        
+        #loginbox-login-link{
+          /* border: 1px solid; */
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+        #loginbox-login-link>p, #loginbox-login-link>a{
+          font-family: "Bebas Neue", serif;
+          font-weight: 400;
+          font-style: normal;
+          letter-spacing: 1px;
+          margin-left: 10px;
+        }
+        #loginbox-head-text{
+          /* border: 1px solid; */
+          font-size: 30px;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-weight: 500;
+          font-style: normal;
+          letter-spacing: 2px;
+          margin-top: 1em;
+        
+        }
+        #login{
+          /* border: 1px solid; */
+          margin-top: 1em;
+        }
+        #login>form{
+          display: flex;
+          flex-direction: column;
+        }
+        #password-input, #email-input{
+          display: grid;
+          margin-bottom: 1em;
+        }
+        #password-input>label, #email-input>label{
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          letter-spacing: 1px;
+          margin-bottom: 10px;
+        }
+        #password-input>input, #email-input>input{
+          height: 2.5em;
+          border: 1px solid rgba(0,0,0,0.2);
+          outline: none;
+          width: 90%;
+          padding: 8px;
+          font-size: 15px;
+        }
+        #login-button-container{
+          border: 1px solid rgba(0,0,0,0.2);
+          margin-top: 2em;
+        
+        }
+        #submit-button{
+          height: 2em;
+          width: 100%;
+          outline: none;
+          color: rgba(0,0,0,0.2);
+          background-color: white;
+          border: 0px;
+          font-size: large;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-weight: 550;
+          font-style: normal;
+          letter-spacing: 1px;
+          cursor: pointer;
+        }
+        #submit-button.enabled {
+          cursor: pointer;
+          color: black;
+        }
+        #forgot-password-container{
+          width: max-content;
+        }
+        #forgot-password-text{
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          letter-spacing: 1px;
+          color: black;
+        }
+        #forgot-password-text:hover{
+          text-decoration: underline;
+        }
+        
+        #other-methods-container{
+          /* border: 1px solid; */
+          margin-top: 2em;
+        }
+        #other-methods-container>p{
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          letter-spacing: 1px;
+        }
+        #login-method-blocks-container{
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          /* border: 1px solid; */
+          margin-top: 1em;
+        }
+        .login-links{
+          height: 4em;
+          width: 4em;
+          padding: 1%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+          transition: 100ms linear;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+        .login-links:hover{
+          box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+          transform: scale(1.1);
+          transition: 100ms linear;
+        }
+        
+        
+        
+        
+        
+        }
+    </style>
+
+
+<body>
+
+    <header>
+        <nav class="navbar ">
+            <div class="container-fluid" id="logo-container">
+                <a class="navbar-brand" href="{% url 'quizapplication:landingpage' %}">
+                    <img id="logo-img" src="/quizkaro/static/images/logo.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    <h6>Quizz Karoo</h6>
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'signup' %}"><button class="navbar-login-button">SignUp</button></a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="main-login-container">
+            <div id="main-login-box">
+
+                <span id="loginbox-login-link">
+                    <p>Don't have an account?</p>
+                    <a href="{% url 'signup' %}" title="Don't have an account? Signup Now!">Sign up</a>
+                </span>
+
+                <span id="loginbox-head-text">
+                    <p>Login</p>
+                </span>
+
+                <span id="login">
+                    <form action="{% url 'login' %}" method="POST">
+                        {% csrf_token %} <!-- ✅ CSRF protection -->
+                    
+                        <span id="email-input">
+                            <label for="id_username">Username</label>
+                            <input type="text" id="email-input-box" name="username" class="form-control" required>
+                        </span>
+                    
+                        <span id="password-input">
+                            <label for="id_password">Password</label>
+                            <input type="password" id="password-input-box" name="password" class="form-control" required>
+                        </span>
+                    
+                        <span id="forgot-password-container">
+                            <a href="{% url 'signup' %}" id="forgot-password-text">Forgot Password?</a>
+                        </span>
+                    
+                        <span id="login-button-container">
+                            <button id="submit-button" type="submit">Login</button>
+                        </span>
+                    </form>
+                    
+                </span> 
+
+                <span id="other-methods-container">
+                    <p>Or Log in with:</p>
+                    <span id="login-method-blocks-container">
+                        <a href="{% url 'login' %}" class="login-links" title="Login with Google">
+                            <i class="fa-brands fa-google fa-lg"></i>
+                            <label>Google</label>
+                        </a>
+                        <a href="{% url 'login' %}" class="login-links" title="Login with Microsoft">
+                            <i class="fa-brands fa-microsoft fa-lg"></i>
+                            <label>Microsoft</label>
+                        </a>
+                        <a href="{% url 'login' %}" class="login-links" title="Login with LinkedIn">
+                            <i class="fa-brands fa-linkedin-in fa-lg"></i>
+                            <label>LinkedIn</label>
+                        </a>
+                        <a href="{% url 'login' %}" class="login-links" title="Login with Apple">
+                            <i class="fa-brands fa-apple fa-lg"></i>
+                            <label>Apple</label>
+                        </a>
+                    </span>
+                </span>
+
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

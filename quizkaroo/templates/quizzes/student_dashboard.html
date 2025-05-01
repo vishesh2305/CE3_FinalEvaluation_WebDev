@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Student Dashboard</title></head>
+<body>
+    <h1>Assigned Quizzes</h1>
+    <ul>
+    {% for quiz in quizzes %}
+        <li>{{ quiz.title }} - Due: {{ quiz.due_date|date:"F d, Y" }}</li>
+    {% empty %}
+        <li>No quizzes assigned yet.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'topic_quiz/topic_quiz.html' %}
+
+{% block title %}Home - Student Learning Platform{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Welcome to Student Learning</h1>
+    <p class="lead">Study various topics and test your knowledge with interactive quizzes.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{% url 'topic_list' %}">View Topics</a>
+    {% else %}
+    <p>Please log in or sign up to access the learning materials.</p>
+    <div class="mt-3">
+        <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+        <a class="btn btn-success" href="{% url 'signup' %}">Sign Up</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2>Featured Topics</h2>
+        <div class="row" id="featured-topics">
+            {% for topic in topics %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 topic-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ topic.title }}</h5>
+                        <p class="card-text">{{ topic.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'topic_detail' topic.id %}" class="btn btn-sm btn-outline-primary">Study Now</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-sm btn-outline-secondary">Login to Study</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No topics available yet.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Add hover effect to topic cards
+        $('.topic-card').hover(
+            function() {
+                $(this).addClass('shadow');
+                $(this).find('.btn').removeClass('btn-outline-primary btn-outline-secondary').addClass('btn-primary');
+            },
+            function() {
+                $(this).removeClass('shadow');
+                if ($(this).find('.btn').hasClass('btn-primary')) {
+                    if ($(this).find('.btn').text() === 'Study Now') {
+                        $(this).find('.btn').removeClass('btn-primary').addClass('btn-outline-primary');
+                    } else {
+                        $(this).find('.btn').removeClass('btn-primary').addClass('btn-outline-secondary');
+                    }
+                }
+            }
+        );
+    });
+</script>
+{% endblock %}
+{% endblock %}

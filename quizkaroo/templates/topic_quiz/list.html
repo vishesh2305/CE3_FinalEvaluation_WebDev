@@ -1,0 +1,94 @@
+{% extends 'topic_quiz/topic_quiz.html' %}
+
+{% block title %}Topics - Student Learning Platform{% endblock %}
+
+{% block content %}
+<h2>Available Topics</h2>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="input-group mb-3">
+            <input type="text" id="topic-search" class="form-control" placeholder="Search topics...">
+            <button class="btn btn-outline-secondary" type="button" id="search-reset">Reset</button>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="topics-container">
+    {% for topic in topics %}
+    <div class="col-md-4 mb-4 topic-item">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ topic.title }}</h5>
+                <p class="card-text">{{ topic.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center bg-transparent">
+                <a href="{% url 'topic_detail' topic.id %}" class="btn btn-sm btn-primary">Study</a>
+                
+                <div>
+                    {% if topic.has_studied %}
+                    <span class="badge bg-success studied-badge">Studied</span>
+                    <a href="{% url 'generate_quiz' topic.id %}" class="btn btn-sm btn-outline-success ms-1">Quiz</a>
+                    {% else %}
+                    <span class="badge bg-secondary">Not studied</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No topics available yet.</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="no-results" class="alert alert-warning" style="display: none;">
+    No topics match your search.
+</div>
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Topic search functionality
+        $('#topic-search').on('keyup', function() {
+            let searchTerm = $(this).val().toLowerCase();
+            let foundAny = false;
+            
+            $('.topic-item').each(function() {
+                let title = $(this).find('.card-title').text().toLowerCase();
+                let description = $(this).find('.card-text').text().toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    $(this).show();
+                    foundAny = true;
+                } else {
+                    $(this).hide();
+                }
+            });
+            
+            // Show "no results" message if needed
+            if (foundAny) {
+                $('#no-results').hide();
+            } else {
+                $('#no-results').show();
+            }
+        });
+        
+        // Reset search
+        $('#search-reset').click(function() {
+            $('#topic-search').val('');
+            $('.topic-item').show();
+            $('#no-results').hide();
+        });
+        
+        // Add animation to the "Studied" badges
+        $('.studied-badge').each(function() {
+            $(this).css('opacity', '0').animate({
+                opacity: 1
+            }, 800);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

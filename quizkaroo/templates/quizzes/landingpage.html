@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Welcome to Quiz App{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {% if not user.is_authenticated %}
+        <div class="text-center">
+            <p>Please log in or sign up to continue.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary m-2">Login</a>
+        </div>
+    {% else %}
+
+    {% endif %}
+
+    <div id="cards-1-row">
+        <div class="cards">
+            <div class="card-body">
+                <h5 class="card-title">Create Quiz</h5>
+                <p class="card-text">Create A Quiz According to Your Need.</p>
+                <button class="search-btn p-2" type="button" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">Create Now</button>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card-body">
+                <h5 class="card-title">Use Templates</h5>
+                <p class="card-text">Use templates for easy and quick Quiz Creation.</p>
+                <button class="card-btn p-2" type="button" onclick="alert('This Option will be available Soon!')">Choose Templates</button>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card-body">
+                <h5 class="card-title">AI Tools</h5>
+                <p class="card-text">Use AI Tools for Quiz. Create Your Own Quiz and Play.</p>
+                <button class="card-btn p-2" type="button" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">Use Now!</button>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card-body">
+                <h5 class="card-title">Join Challenges</h5>
+                <p class="card-text">Join the Ongoing Quiz Challenges</p>
+                <button class="card-btn p-2" type="button" onclick="alert('This Option will be available Soon!')">Join Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cards-2-row">
+        <div class="slide-container swiper">
+            <div class="slide-content">
+                <div class="card-wrapper swiper-wrapper">
+                    <div class="card swiper-slide" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+                            <div class="card-image">
+                                <img src="{% static 'images/cube_giphy.gif' %}" alt="Logical Quiz" class="card-img-top">
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-text">Check Your Knowledge of Logical Reasoning With our Logical Quizzes and Get Best Results.</p>
+                        </div>
+                    </div>
+
+                    <div class="card swiper-slide" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+                            <div class="card-image">
+                                <img src="{% static 'images/quiztime_giphy.gif' %}" alt="Timed Quiz" class="card-img-top">
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-text">Play This Time-Based Quiz to Test Your Knowledge and Speed.</p>
+                        </div>
+                    </div>
+
+                    <div class="card swiper-slide" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+                            <div class="card-image">
+                                <img src="{% static 'images/penguin_giphy.gif' %}" alt="Fun Quiz" class="card-img-top">
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-text">Enjoy Fun and Interactive Quizzes for Mental Strength and Peace.</p>
+                        </div>
+                    </div>
+
+                    <div class="card swiper-slide" onclick="window.location.href='{% url 'quizapplication:quiz_search' %}'">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+                            <div class="card-image">
+                                <img src="{% static 'images/sliding_pandas_giphy.gif' %}" alt="Refresh Quiz" class="card-img-top">
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-text">Tired of Educational Quizzes? Try Our Fun Quizzes to Refresh Your Mind.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next swiper-navBtn"></div>
+            <div class="swiper-button-prev swiper-navBtn"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <div id="cards-3-row">
+        <h4>What's New</h4>
+
+        <div id="main-first-section" class="odd-section">
+            <span id="main-gif-video-first-section">
+                <img id="main-gif-image-first-section" src="{% static 'images/use-cases-online-quiz-create-high-quality-quizzes-our-easy-to-use-quiz-maker.webp' %}" alt="Geography Quiz">
+            </span>
+            <span id="main-gif-first-section-text">
+                <h1>Embark on a Global Expedition: The Ultimate World Geography Challenge</h1>
+                <p>Join us on a captivating journey across continents, cultures, and natural wonders. Test your knowledge of our diverse planet.</p>
+            </span>
+        </div>
+
+        <div id="main-first-section" >
+            <span id="main-gif-first-section-text">
+                <h1>Navigate the Globe: The All-Encompassing World Geography Quiz Experience</h1>
+                <p>Step into a realm of discovery where every question takes you closer to mastering our planet.</p>
+            </span>
+            <span id="main-gif-video-first-section">
+                <img id="main-gif-image-first-section" src="{% static 'images/use-cases-online-quiz-make-quizzes-more-interactive-engaging.webp' %}" alt="Geography Quiz 2">
+            </span>
+        </div>
+
+        <div id="main-first-section" class="odd-section">
+            <span id="main-gif-video-first-section">
+                <img id="main-gif-image-first-section" src="{% static 'images/general_knowledge_card.png' %}" alt="General Knowledge">
+            </span>
+            <span id="main-gif-first-section-text">
+                <h1>Journey Through the Spectrum of Knowledge: The Ultimate General Knowledge Quiz Challenge</h1>
+                <p>Explore facts, trivia, and insights from history to science and beyond.</p>
+            </span>
+        </div>
+
+        <div id="main-first-section">
+            <span id="main-gif-first-section-text">
+                <h1>Scholarly Pursuits: A Comprehensive Journey Through Modern Education</h1>
+                <p>Explore the evolution of learning and technology in education.</p>
+            </span>
+            <span id="main-gif-video-first-section">
+                <img id="main-gif-image-first-section" src="{% static 'images/educational_pic_for_cards.png' %}" alt="Education Quiz">
+            </span>
+        </div>
+
+        <div id="main-first-section" class="odd-section">
+            <span id="main-gif-video-first-section">
+                <img id="main-gif-image-first-section" src="{% static 'images/use-cases-online-quiz-save-time-with-automatic-scoring.webp' %}" alt="Auto Scoring">
+            </span>
+            <span id="main-gif-first-section-text" style="align-items: flex-start;">
+                <h1>Save Time with Automatic Scoring</h1>
+                <p>Easily auto-score quizzes by marking answer choices and see scores immediately.</p>
+            </span>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div id="footer-links-container">
+            <span class="links-section">
+                <h4>Popular Templates</h4>
+                <span class="footer-links-container">
+                    <a href="#" onclick="alert('This Option will be available Soon!')">Best Quizzes</a>
+                    <a href="#" onclick="alert('This Option will be available Soon!')">All Templates</a>
+                    <a href="#" onclick="alert('This Option will be available Soon!')">Overview</a>
+                </span>
+            </span>
+            <span class="links-section">
+                <h4>Resources</h4>
+                <span class="footer-links-container">
+                    <a href="#" onclick="alert('This Option will be available Soon!')">Blog</a>
+                    <a href="#" onclick="alert('This Option will be available Soon!')">Resource Center</a>
+                    <a href="#" onclick="alert('This Option will be available Soon!')">Support</a>
+                </span>
+            </span>
+            <span class="links-section">
+                <h4>About</h4>
+                <span class="footer-links-container">
+                    <a href="#" onclick="alert('This Option will be available Soon!')">How to Play Quiz</a>
+                    <a href="{% url 'login' %}">Log in</a>
+                    <a href="#">Sign up</a> <!-- Update with signup URL if implemented -->
+                </span>
+            </span>
+        </div>
+        <span id="footer-social-links-container">
+            <span class="footer-social-links"><i class="fa-brands fa-linkedin fa-lg"></i></span>
+            <span class="footer-social-links"><i class="fa-brands fa-youtube fa-lg"></i></span>
+            <span class="footer-social-links"><i class="fa-brands fa-instagram fa-lg"></i></span>
+            <span class="footer-social-links"><i class="fa-brands fa-facebook fa-lg"></i></span>
+            <span class="footer-social-links"><i class="fa-brands fa-x-twitter fa-lg"></i></span>
+        </span>
+    </footer>
+{% endblock %}

@@ -1,0 +1,711 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+</head>
+
+
+
+
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        text-decoration: none;
+    }
+
+
+    @media (min-width: 1000px) {
+      
+
+
+    body{
+        height: 100vh;
+        width: 100vw;
+    }
+
+    body::-webkit-scrollbar{
+        display: none;
+      }
+
+      #logo-container{
+        height: 4em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #logo-container>a{
+        height: 4em;
+      }
+      #logo-container>a>img{
+        height: 3em;
+        width: 3em;
+      }
+
+
+      #header{
+        position: fixed;
+        width: 100%;
+        margin-bottom: 2em;
+      }
+
+    .navbar{
+        display: flex;
+        align-items: center;
+        padding: 1em 2em;
+        justify-content: space-between;
+        box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+        background-color: white;
+    }
+    .container-fluid{
+        width: max-content;
+        margin: 0px;
+    }
+
+
+
+
+
+
+    form {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    form p {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: calc(100% - 12px);
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .errors {
+        background-color: #ffebee;
+        border: 1px solid #f44336;
+        color: #f44336;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+    }
+
+    .errors ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 5px 0 0 0;
+    }
+
+    button[type="submit"] {
+        background-color: rgb(135, 34, 242);
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button[type="submit"]:hover {
+        background-color: rgb(135, 34, 242);
+    }
+
+
+
+
+
+.navbar-login-button{
+  background-color: #222;
+  border-radius: 4px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+  max-width: none;
+  min-height: 44px;
+  min-width: 10px;
+  outline: none;
+  overflow: hidden;
+  padding: 9px 20px 8px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+}
+
+.navbar-login-button:hover,
+.navbar-login-button:focus {
+  opacity: .75;
+}
+
+
+main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5em 0em;
+}
+
+
+
+
+#main-signup-container{
+    width: 50%;
+    margin-top: 4em;
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2%;
+  }
+  #main-signup-box{
+    width: 98%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  #signupbox-login-link{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  #signupbox-login-link>p, #signupbox-login-link>a{
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+    margin-left: 10px;
+  }
+  #signupbox-head-text{
+    font-size: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 2px;
+    margin-top: 1em;
+  
+  }
+  #signup{
+    margin-top: 1em;
+  }
+  #signup>form{
+    display: flex;
+    flex-direction: column;
+  }
+  #username-input, #email-input{
+    display: grid;
+    margin-bottom: 1em;
+  }
+  #username-input>label, #email-input>label, #password-input>label, #confirm-password-input>label{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  #confirm-password-input{
+    padding: 10px 0px;
+  }
+  #username-input>input, #email-input>input, #password-input>input, #confirm-password-input>input{
+    height: 2.5em;
+    border: 1px solid rgba(0,0,0,0.2);
+    outline: none;
+    width: 90%;
+    padding: 8px;
+    font-size: 15px;
+  }
+  
+  #terms-condition-checkbox-container{
+    display: flex;
+    align-items: center;
+    width: max-content;
+    margin-top: 1em;
+  }
+  #terms-condition-checkbox-container>input{
+    cursor: pointer;
+    transition: 100ms linear;
+  }
+  #terms-condition-checkbox-container>input:hover{
+    transform: scale(1.1);
+    transition: 100ms linear;
+  }
+  #terms-condition-checkbox-container>label{
+    font-size: small;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  #terms-condition-checkbox-container>label:hover{
+    text-decoration: underline;
+  }
+  
+  #create-account-button-container{
+    border: 1px solid rgba(0,0,0,0.2);
+    margin-top: 2em;
+  
+  }
+  #submit-button{
+    height: 2em;
+    width: 100%;
+    outline: none;
+    background-color: white;
+    border: 0px;
+    font-size: large;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 550;
+    font-style: normal;
+    letter-spacing: 1px;
+  }
+  #submit-button.enabled {
+    cursor: pointer;
+    color: black;
+  }
+  #other-methods-container{
+    margin-top: 2em;
+  }
+  #other-methods-container>p{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+  }
+  #signup-method-blocks-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: 1px solid; */
+    margin-top: 1em;
+  }
+  .signup-links{
+    height: 4em;
+    width: 4em;
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: 100ms linear;
+    border-radius: 10px;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+  }
+  .signup-links:hover{
+    box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    transform: scale(1.1);
+    transition: 100ms linear;
+  }
+
+
+}
+
+
+@media (max-width: 999px) {
+
+
+  body{
+    height: max-content;
+    width: 100vw;
+    display: grid;
+    align-items: normal;
+    overflow: scroll;
+  }
+
+  body::-webkit-scrollbar{
+    display: none;
+  }
+
+   
+  #logo-container{
+    height: 4em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #logo-container>a{
+    height: 4em;
+  }
+  #logo-container>a>img{
+    height: 3em;
+    width: 3em;
+  }
+
+  .navbar{
+    display: flex;
+    align-items: center;
+    padding: 1em 2em;
+    justify-content: space-between;
+    box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+}
+.container-fluid{
+    width: max-content;
+    margin: 0px;
+}
+
+.navbar-login-button{
+background-color: #222;
+border-radius: 4px;
+border-style: none;
+box-sizing: border-box;
+color: #fff;
+cursor: pointer;
+display: inline-block;
+font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+font-size: 16px;
+font-weight: 700;
+line-height: 1.5;
+margin: 0;
+max-width: none;
+min-height: 44px;
+min-width: 10px;
+outline: none;
+overflow: hidden;
+padding: 9px 20px 8px;
+position: relative;
+text-align: center;
+text-transform: none;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+width: 100%;
+}
+
+.navbar-login-button:hover,
+.navbar-login-button:focus {
+opacity: .75;
+}
+
+
+
+
+main{
+  padding: 5em;
+  align-self: center;
+  padding: 1em;
+  height: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding-top: 5em; */
+}
+
+#main-signup-container{
+  width: 98%;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+  overflow: scroll;
+  padding: 2em 1em;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:max-content;
+  position: absolute;
+  top: 20vh;
+}
+#main-signup-container::-webkit-scrollbar{
+  display: none;
+}
+#main-signup-box{
+  width: 98%;
+  display: grid;
+  height: 100%;
+}
+#signupbox-login-link{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#signupbox-login-link>p, #signupbox-login-link>a{
+  font-family: "Bebas Neue", serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 1px;
+  margin-left: 10px;
+}
+#signupbox-head-text{
+  font-size: 50px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 2px;
+  margin-top: 1em;
+
+}
+
+#signup{
+  /* margin-top: 1em; */
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+#signup>form{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 90%;
+}
+#username-input, #email-input{
+  display: grid;
+  margin-bottom: 1em;
+}
+#username-input>label, #email-input>label, #password-input>label, #confirm-password-input>label{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  font-size: 2em;
+  font-style: normal;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+#confirm-password-input{
+  padding: 10px 0px;
+}
+#username-input>input, #email-input>input, #password-input>input, #confirm-password-input>input{
+  height: 5em;
+  border: 1px solid rgba(0,0,0,0.2);
+  outline: none;
+  width: 100%;
+  padding: 8px;
+  /* font-size: 20px; */
+}
+#terms-condition-checkbox-container{
+  display: flex;
+  align-items: center;
+  width: max-content;
+  margin-top: 1em;
+}
+#terms-condition-checkbox-container>input{
+  cursor: pointer;
+  transition: 100ms linear;
+}
+#terms-condition-checkbox-container>input:hover{
+  transform: scale(1.1);
+  transition: 100ms linear;
+}
+#terms-condition-checkbox-container>label{
+  font-size: large;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 1px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+#terms-condition-checkbox-container>label:hover{
+  text-decoration: underline;
+}
+
+
+
+
+#submit-button{
+  height: 3em;
+  width: 100%;
+  outline: none;
+  background-color: white;
+  border: 0px;
+  font-size: large;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 550;
+  font-style: normal;
+  letter-spacing: 1px;
+  margin-top: 2em;
+  border: 1px solid rgba(0,0,0,0.2);
+
+}
+#submit-button.enabled {
+  cursor: pointer;
+  color: black;
+}
+#other-methods-container{
+  /* margin-top: 2em; */
+  margin-top: 20em;
+  height: max-content;
+}
+#other-methods-container>p{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 1px;
+}
+#signup-method-blocks-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  /* border: 1px solid; */
+  margin-top: 1em;
+}
+.signup-links{
+  height: 4em;
+  width: 4em;
+  padding: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  transition: 100ms linear;
+  border-radius: 10px;
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+}
+.signup-links:hover{
+  box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  transform: scale(1.1);
+  transition: 100ms linear;
+}
+
+
+
+
+
+}
+
+
+
+  /* dashboard remains good upto 1100 px */
+  /* signup and login work good upto 700px */
+
+  /* below 1000 px sidebar needs to be hidden */
+
+  /* profile page needs to be adjusted below 1000px padding must be adjusted */
+
+  /* Search page styling needs to be change */
+
+  /* Search result page styling needs to be change */
+
+  /* models styling should be changed */
+</style>
+
+
+
+<body>
+
+
+    <header>
+        <nav class="navbar ">
+            <div class="container-fluid" id="logo-container">
+                <a class="navbar-brand" href="">
+                    <img id="logo-img" src="{% static 'images/logo.jpg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    <h6>Quizz Karoo</h6>
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'login' %}"><button class="navbar-login-button">Login</button></a>
+            </div>
+        </nav>
+    </header>
+
+
+
+
+    <main>
+        <section id="main-signup-container">
+            <div id="main-signup-box">
+                <span id="signupbox-login-link">
+                    <p>Already have an account?</p>
+                    <a href="{% url 'login' %}" title="Already have an account? Login Now!">Log in</a>
+
+                </span>
+                <span id="signupbox-head-text">
+                    <p>Create an account</p>
+                </span>
+
+
+                <span id="signup">
+
+
+                  <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    {% if form.errors %}
+                        <div class="errors">
+                            <p>Please correct the following errors:</p>
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <button type="submit">Sign Up</button>
+                </form>
+
+
+
+                </span>
+
+            </div>
+        </section>
+    </main>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

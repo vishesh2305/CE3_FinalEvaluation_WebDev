@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Assign Quiz{% endblock %}
+{% block content %}
+    <h1>Assign Quiz</h1>
+    <form method="post">
+        {% csrf_token %}
+        <select name="quiz_id">
+            {% for quiz in quizzes %}
+                <option value="{{ quiz.id }}">{{ quiz.title }}</option>
+            {% endfor %}
+        </select>
+        <select name="subject_id">
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="students" multiple>
+            {% for student in students %}
+                <option value="{{ student.id }}">{{ student.user.username }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="timer_minutes" min="1" value="30">
+        <input type="number" name="passing_marks" step="0.1" value="50.0" max="100">
+        <label><input type="checkbox" name="is_public"> Public</label>
+        <label><input type="checkbox" name="is_homework"> Homework</label>
+        <button type="submit">Assign</button>
+    </form>
+{% endblock %}

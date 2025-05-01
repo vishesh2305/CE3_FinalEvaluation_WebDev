@@ -1,0 +1,11 @@
+
+
+{% extends 'base.html' %}
+{% block title %}Quiz on {{ topic }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4 text-blue-600">📝 Quiz on: {{ topic }}</h2>
+    <div class="bg-gray-50 p-4 rounded whitespace-pre-wrap text-gray-800">{{ quiz }}</div>
+</div>
+{% endblock %}

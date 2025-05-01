@@ -1,0 +1,145 @@
+{% extends 'topic_quiz/topic_quiz.html' %}
+
+{% block title %}{{ topic.title }} - Student Learning Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .progress-tracker {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 10px 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+    
+    .content-section {
+        scroll-margin-top: 70px;
+    }
+    
+    #reading-progress {
+        transition: width 0.3s ease;
+    }
+    
+    #marked-complete {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'topic_list' %}">Topics</a></li>
+                <li class="breadcrumb-item active">{{ topic.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3>{{ topic.title }}</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                <p class="card-text">{{ topic.description }}</p>
+                
+                <hr>
+                
+                <div id="learning-content" class="mt-4">
+                    {{ topic.content|linebreaks }}
+                </div>
+                
+                <div class="mt-5">
+                    <form id="mark-studied-form" method="post">
+                        {% csrf_token %}
+                        <button id="mark-studied-btn" type="submit" class="btn btn-success">
+                            <span class="spinner-border spinner-border-sm d-none" id="study-spinner" role="status" aria-hidden="true"></span>
+                            Mark as Studied
+                        </button>
+                        <div id="marked-complete" class="alert alert-success mt-3">
+                            <strong>Great job!</strong> You've marked this topic as studied. Now you can take a quiz!
+                            <div class="mt-2">
+                                <a href="{% url 'generate_quiz' topic.id %}" class="btn btn-outline-primary">Take Quiz</a>
+                                <a href="{% url 'topic_list' %}" class="btn btn-outline-secondary">Back to Topics</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="progress-tracker">
+    <small class="text-muted">Reading Progress</small>
+    <div class="progress" style="height: 5px; width: 150px;">
+        <div id="reading-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Calculate reading progress
+        $(window).scroll(function() {
+            let windowHeight = $(window).height();
+            let documentHeight = $(document).height();
+            let scrollTop = $(window).scrollTop();
+            let progress = (scrollTop / (documentHeight - windowHeight)) * 100;
+            $('#reading-progress').css('width', progress + '%');
+        });
+        
+        // Mark as studied using AJAX
+        $('#mark-studied-form').submit(function(e) {
+            e.preventDefault();
+            
+            // Show spinner
+            $('#study-spinner').removeClass('d-none');
+            $('#mark-studied-btn').attr('disabled', true);
+            
+            $.ajax({
+                type: 'POST',
+                url: '{% url "topic_detail" topic.id %}',
+                data: $(this).serialize(),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(data) {
+                    if (data.status === 'success') {
+                        // Hide button and show success message
+                        $('#mark-studied-btn').hide();
+                        $('#marked-complete').fadeIn();
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                },
+                complete: function() {
+                    // Hide spinner
+                    $('#study-spinner').addClass('d-none');
+                    $('#mark-studied-btn').attr('disabled', false);
+                }
+            });
+        });
+        
+        // Add smooth scrolling to content sections
+        $('.content-section').each(function() {
+            const id = $(this).attr('id');
+            $(`.toc-link[href="#${id}"]`).click(function(e) {
+                e.preventDefault();
+                const target = $(`#${id}`);
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 70
+                }, 500);
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}
+
+

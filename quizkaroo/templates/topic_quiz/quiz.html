@@ -1,0 +1,168 @@
+{% extends 'topic_quiz/topic_quiz.html' %}
+
+{% block title %}Quiz - {{ topic.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-timer {
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .quiz-timer.warning {
+        color: #ffc107;
+    }
+
+    .quiz-timer.danger {
+        color: #dc3545;
+    }
+
+    .question-card {
+        border-left: 5px solid #007bff;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        font-weight: bold;
+    }
+
+    #quiz-progress {
+        height: 8px;
+    }
+
+    .question-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .question-nav-btn {
+        visibility: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Quiz: {{ topic.title }}</h2>
+    </div>
+    <div class="col-md-4">
+        <div class="quiz-timer" id="quiz-timer">10:00</div>
+    </div>
+</div>
+
+<div class="progress mb-4">
+    <div id="quiz-progress" class="progress-bar" role="progressbar" style="width: 0%"></div>
+</div>
+
+<form method="post" id="quiz-form">
+    {% csrf_token %}
+
+    <div id="question-container">
+        {% for question in questions %}
+        <div class="question-slide" id="question-{{ forloop.counter }}" {% if not forloop.first %}style="display: none;"{% endif %}>
+            <div class="card question-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Question {{ forloop.counter }} of {{ questions|length }}</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ question.text }}</h5>
+                    <div class="answers mt-3">
+                        {% for answer in question.answers.all %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio"
+                                   name="question_{{ question.id }}"
+                                   id="answer_{{ question.id }}_{{ answer.id }}"
+                                   value="{{ answer.id }}" required>
+                            <label class="form-check-label" for="answer_{{ question.id }}_{{ answer.id }}">
+                                {{ answer.text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-navigation">
+                <button type="button" class="btn btn-secondary prev-question"
+                        {% if forloop.first %}style="visibility: hidden;"{% endif %}>
+                    Previous Question
+                </button>
+                <div>
+                    <span class="question-indicator">{{ forloop.counter }} / {{ questions|length }}</span>
+                </div>
+                {% if not forloop.last %}
+                <button type="button" class="btn btn-primary next-question">Next Question</button>
+                {% endif %}
+                {% if forloop.last %}
+                <button type="submit" class="btn btn-success" id="submit-quiz">Submit Quiz</button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-warning">No questions available for this topic.</div>
+        {% endfor %}
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Quiz timer setup
+        let timeLeft = 10 * 60;
+        let timerInterval = setInterval(function() {
+            timeLeft--;
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            let formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            $('#quiz-timer').text(formatted);
+
+            if (timeLeft <= 120) {
+                $('#quiz-timer').addClass('danger').removeClass('warning');
+            } else if (timeLeft <= 300) {
+                $('#quiz-timer').addClass('warning');
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert('Time is up! Submitting your quiz.');
+                $('#quiz-form').submit();
+            }
+        }, 1000);
+
+        let currentQuestion = 1;
+        let totalQuestions = {{ questions|length }};
+
+        function updateProgress() {
+            let progress = (currentQuestion / totalQuestions) * 100;
+            $('#quiz-progress').css('width', progress + '%');
+        }
+
+        updateProgress();
+
+        $('.next-question').click(function() {
+            if (currentQuestion < totalQuestions) {
+                $(`#question-${currentQuestion}`).hide();
+                currentQuestion++;
+                $(`#question-${currentQuestion}`).fadeIn();
+                updateProgress();
+            }
+        });
+
+        $('.prev-question').click(function() {
+            if (currentQuestion > 1) {
+                $(`#question-${currentQuestion}`).hide();
+                currentQuestion--;
+                $(`#question-${currentQuestion}`).fadeIn();
+                updateProgress();
+            }
+        });
+
+        $('#quiz-form').on('submit', function() {
+            $(this).find('button[type="submit"]').prop('disabled', true);
+        });
+    });
+</script>
+{% endblock %}

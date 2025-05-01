@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if search_query %}Search Results for "{{ search_query }}"{% else %}{% if topic %}{{ topic.name }} Quizzes{% else %}All Quizzes{% endif %}{% endif %}
+{% endblock %}
+{% block content %}
+    <h1>
+        {% if search_query %}
+            Search Results for "{{ search_query }}"
+        {% else %}
+            {% if topic %}{{ topic.name }} Quizzes{% else %}ALL QUIZZES{% endif %}
+        {% endif %}
+    </h1>
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if topic and not search_query %}
+        <a href="{% url 'quizapplication:topic_list' topic.category.id %}" class="btn card-btn mb-3">Back to Topics</a>
+    {% endif %}
+    <div class="row">
+        {% for quiz in quizzes %}
+            <div class="col-md-4 mb-3">
+                <div class="cards {% if quiz.is_dynamic %}border-primary{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ quiz.title }}</h5>
+                        <p class="card-text">
+                            Topic: {{ quiz.topic.name }} ({{ quiz.topic.category.name }})
+                            {% if quiz.is_dynamic %}
+                                <span class="badge bg-primary">Newly Generated</span>
+                            {% endif %}
+                        </p>
+                        <button onclick="window.location.href='{% url 'quizapplication:quiz_detail' quiz.id %}'" class="btn card-btn">Take Quiz</button>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>
+                {% if search_query %}
+                    No quizzes found for "{{ search_query }}".
+                {% else %}
+                    No quizzes available.
+                {% endif %}
+            </p>
+        {% endfor %}
+    </div>
+{% endblock %}

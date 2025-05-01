@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Quizz-Karoo __ Learnify
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<style>
+
+    #learnpage-heading{
+        margin-top: 1em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #searchpage-2-form{
+        width: 80%;
+        padding-top: 5em;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+
+     
+    #searchbar-2-container{
+        width: 60%;
+        height: 2.5em;
+        border-radius: 10px;
+        outline: none;
+        border: 1px solid grey;
+        padding: 10px;
+    }
+    
+    .search-1-btn{
+        border: 1px solid rgb(135, 34, 242);
+        background-color: white;
+        padding: 0.5em 1em;
+        border-radius: 8px;
+    }
+    .search-1-btn:hover{
+        background-color: #8722f2;
+        transition: 100ms linear;
+        color: white;
+    }
+
+</style>
+
+<h1 id="learnpage-heading">Search a Topic to Learn</h1>
+<form action="{% url 'learnify:show_result' %}" id="searchpage-2-form" method="POST">
+    {% csrf_token %}
+    <input type="text" name="topic" id="searchbar-2-container" placeholder="Enter topic..." required>
+    <button type="submit" class="search-1-btn">Search</button>
+</form>
+    
+{% endblock %}

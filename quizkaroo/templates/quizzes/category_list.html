@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categories{% endblock %}
+{% block content %}
+    <h1>Quiz Categories</h1>
+    <div class="row">
+        {% for category in categories %}
+            <div class="col-md-4 mb-3">
+                <div class="cards">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description }}</p>
+                        <a href="{% url 'quizapplication:topic_list' category.id %}" class="btn card-btn">View Topics</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No categories available.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

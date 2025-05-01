@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quizz-Karoo __ Progress
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Your Quiz Progress</h1>
+        {% if results %}
+            <ul class="list-group">
+                {% for result in results %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Quiz:</strong> {{ result.quiz_name }} -
+                            <strong>Score:</strong> {{ result.score }}
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">{{ result.timestamp }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="mt-3 text-muted">No quiz results found.</p>
+        {% endif %}
+    </div>
+{% endblock %}

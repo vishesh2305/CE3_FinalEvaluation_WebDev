@@ -1,0 +1,1165 @@
+{% load static %}
+{% load group_filters %}  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% if request.session.share_info %}
+        <meta property="og:title" content="Quiz Results" />
+        <meta property="og:description" content="{{ request.session.share_info.text }}" />
+        <meta property="og:url" content="{{ request.session.share_info.url }}" />
+        <meta property="og:type" content="website" />
+    {% endif %}
+    <meta charset="UTF-8">
+    <title>{% block title %}Quizz-Karoo{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="{% static 'quizzes/dashboard.css' %}">    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
+    rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<style>
+    .bebas-neue-regular {
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      *{
+          padding: 0px;
+          margin: 0px;
+          text-decoration: none;
+          box-sizing: border-box;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+      html{
+        min-width: 100vw;
+      }
+      
+      @media (min-width: 1000px) {
+      
+      body{
+          width: 100vw;
+      }
+      ::-webkit-scrollbar{
+          display: none;
+      }
+      
+      header{
+          display: flex;
+          align-items: center;
+          width: 100vw;
+          position: fixed;
+          background-color: white;
+          z-index: 2;
+      }
+      #navbar{
+          width: 100%;
+          height: 5em;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+          padding: 0em 2em;
+      }
+      #logo-container{
+          margin: 0em 1.5em;
+          border-radius: 50%;
+          height: 4em;
+          width: 4em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          overflow: hidden;
+      }
+      #logo-container>figure>img{
+          height: 100%;
+          width: 100%;
+      }
+      
+      #searchbar-container{
+          width: 40%;
+      }
+      
+      .search-btn{
+          border: 1px solid rgb(135, 34, 242);
+          background-color: white;
+          padding: 0em 1em;
+          border-radius: 8px;
+      }
+      .search-btn:hover{
+          background-color: #8722f2;
+          transition: 100ms linear;
+          color: white;
+      }
+      
+      .search-btn-small-screen{
+      display: none;
+      
+      }
+      
+      #buttons-container{
+          width: max-content;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+      #profile-section{
+          margin: 0em 1.5em;
+          border-radius: 50%;
+          height: 4em;
+          width: 4em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          overflow: hidden;
+      }
+      #profile-section>a>figure>img{
+          height: 100%;
+          width: 100%;
+      }
+      
+      #main{
+          min-height: 100vh;
+          max-height: max-content;
+          display: flex;
+          top: 5em;
+          z-index: 0;
+      
+      }
+      #sidebar-main{
+          width: 15vw;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          height: 89vh;
+          box-shadow: 0px 2px 1px rgba(0, 0,0,0.3);
+          overflow: hidden;
+          border-bottom:none;
+          position: fixed;
+          top: 5em;
+          z-index: 2;
+          padding: 0px;
+      }
+      #sidebar-main-child-1{
+        width: 100%;
+        display: grid;
+      }
+      #sidebar-main-child-2{
+        width: 100%;
+      }
+
+      #content-section-main{
+          width: 85vw;
+          height: max-content;
+          position: relative;
+          left: 15vw;
+          top: 5em;
+          z-index: 0;
+          padding: 10px;
+      }
+      
+      #cards-1-row{
+          padding: 1em 0em;
+          display: flex;
+          height: max-content;
+          align-items: center;
+          justify-content: space-between;
+          /* margin-top: 2em; */
+      
+      }
+      .cards{
+          margin-right: 1em;
+          height: max-content;
+          overflow: scroll;
+      }
+      .card{
+        margin-right: 1em;
+        height: max-content;
+        overflow: scroll;
+      }
+      
+      .slide-container{
+        width: 100%;
+        padding: 40px 0;
+      }
+      .card-body{
+        height: 10em;
+      }
+      
+      .card-wrapper{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+      
+      .slide-content{
+        /* margin: 0 40px; */
+        overflow: hidden;
+        border-radius: 25px;
+        width: 100%;
+      }
+      .cards{
+        border-radius: 25px;
+        background-color: #FFF;
+        cursor: pointer;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .image-content,
+      .card-content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 14px;
+      }
+      .image-content{
+        position: relative;
+        row-gap: 5px;
+        padding: 25px 0;
+      }
+      .overlay{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #8722f2;
+        border-radius: 25px 25px 0 25px;
+      }
+      
+      .overlay::after{
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -40px;
+        height: 40px;
+        width: 40px;
+        background-color: #8722f2;
+      }
+      .overlay::after{
+        border-radius: 0 25px 0 0;
+        background-color: #FFF;
+      }
+      .card-image{
+        position: relative;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        padding: 3px;
+      }
+      .card-image .card-img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #4070F4;
+      }
+      .name{
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+      }
+      .description{
+        font-size: 14px;
+        color: #707070;
+        text-align: center;
+      }
+      .button{
+        border: none;
+        font-size: 16px;
+        color: #FFF;
+        padding: 8px 16px;
+        background-color: #4070F4;
+        border-radius: 6px;
+        margin: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .button:hover{
+        background: #265DF2;
+      }
+      .swiper-navBtn{
+        color: #6E93f7;
+        transition: color 0.3s ease;
+      }
+      .swiper-navBtn:hover{
+        color: #4070F4;
+      }
+      .swiper-navBtn::before,
+      .swiper-navBtn::after{
+        font-size: 35px;
+      }
+      .swiper-button-next{
+        right: 0;
+      }
+      .swiper-button-prev{
+        left: 0;
+      }
+      .swiper-pagination-bullet{
+        background-color: #6E93f7;
+        opacity: 1;
+      }
+      .swiper-pagination-bullet-active{
+        background-color: #4070F4;
+      }
+
+
+
+
+
+      @media screen and (max-width: 768px) {
+        .slide-content{
+          margin: 0 10px;
+        }
+        .swiper-navBtn{
+          display: none;
+        }
+      }
+      
+      #cards-3-row{
+          padding: 2em;
+          width: 96%;
+          display: flex;
+          flex-flow: column;
+          height: max-content;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 10px;
+          /* box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px; */
+          justify-self: center;
+          overflow: hidden;    
+      }
+      
+      #cards-3-row > h4{
+          width: 100%;
+          padding: 1em;
+          border-radius: 10px;
+          box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+      }
+      
+      #main-first-section{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 20em;
+        margin-top: 5em;
+      }
+      #main-gif-video-first-section{
+        height: 100%;
+        width: 40%;
+        border-radius: 10px;
+        overflow: hidden;
+        /* border: 1px solid; */
+      }
+      #main-gif-image-first-section{
+        height: 100%;
+        width: 100%;   
+      }
+      #main-gif-first-section-text{
+        width: 50%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        height: 20em;
+      }
+      #main-gif-first-section-text>h1{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 2px;
+      
+      }
+      #main-gif-first-section-text>p{
+        font-family: "Bebas Neue";
+        letter-spacing: 2px;
+        color: rgb(82, 82, 82);
+      }
+      
+      .card-btn{
+        border: 1px solid rgb(135, 34, 242);
+        background-color: white;
+        border-radius: 10px;
+      }
+      .card-btn:hover{
+        background-color: #8722f2;
+        color: white;
+        transition: 100ms linear;
+        border: 1px solid white;
+      }
+      
+      footer{
+        width: 100%;
+        margin: 5em auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      #footer-links-container{
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .links-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+      }
+      .footer-links-container{
+        display: flex;
+        flex-direction: column;
+      
+      }
+      .links-section>h4{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 3px;
+      }
+      .footer-links-container>a{
+        text-decoration: none;
+        color: black;
+        font-family: serif;
+        font-weight: 400;
+        font-style: normal;
+        margin-top: 1em;
+      }
+      .footer-links-container>a:hover{
+        text-decoration: underline;
+      }
+      #footer-social-links-container{
+        margin-top: 5em;
+        width: 16em;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .footer-social-links{
+        padding: 4%;
+        transition: 100ms linear;
+        border-radius: 10px;
+      }
+      .footer-social-links:hover{
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+        transition: 100ms linear;
+      }
+      
+      .dropdown{
+        display: none;
+      }
+      
+      }
+      
+      @media (max-width: 999px) {
+      
+      html{
+        overflow-x: hidden;
+      
+      }
+        
+      body{
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar{
+        display: none;
+      }
+      
+      header{
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100vw;
+        position: fixed;
+        background-color: white;
+        z-index: 2;
+      }
+      #navbar{
+        width: 100%;
+        height: 5em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+        padding: 0em 2em;
+      
+      }
+      #logo-container{
+        /* margin: 0em 1.5em; */
+        /* border-radius: 50%; */
+        height: 90%;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      
+      #logo-container>figure{
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      
+      }
+      #logo-container>figure>img{
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-top: 10px;
+        object-fit: contain;
+      }
+      
+      #searchbar-container{
+        width: 60%;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+        border-radius: 8px;
+      }
+      
+      .search-btn{
+        border: 1px solid rgb(135, 34, 242);
+        background-color: white;
+        display: none; /* Hidden for small Screens */
+      }
+      .search-btn:hover{
+        background-color: #8722f2;
+        transition: 100ms linear;
+        color: white;
+      }
+      
+      .search-btn-small-screen{
+        border: 0px;
+        background-color: white;
+        color: #8722f2;
+        border-radius: 50%;
+        padding: 0.5em;
+      
+      }
+      
+      #buttons-container{
+        display: none;
+      
+      }
+      #profile-section{
+        margin: 0em 1.5em;
+        border-radius: 50%;
+        height: 4em;
+        width: 4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      
+      }
+      
+      #profile-section>a>figure>img{
+        height: 100%;
+        width: 100%;
+      }
+      
+      /* #dropdown-profile-btn{
+        overflow: hidden;
+        height: 3em;
+        width: 3em;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        object-fit: contain;
+        z-index: 0;
+        background: url(/static/logo.jpg);
+      }
+      #dropdown-profile-btn>a{
+        height: 100%;
+        width: 100%;  
+        border-radius: 50%;
+      }
+      #dropdown-profile-btn>a>figure>img{
+        height: 100%;
+        width: 100%;
+        
+      } */
+      
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        border: none;
+        outline: none;
+      }
+      
+      .dropdown-toggle {
+        background: none;
+        padding: 0;
+        border: none;
+      }
+      
+      .dropdown-toggle img {
+        width: 50px; /* Adjust size as needed */
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .dropdown-toggle::after {
+        display: none; 
+      }
+      
+      .dropdown-menu {
+        width: max-content;
+        height: max-content; 
+        border-radius: 10px;
+        padding: 10px;
+      }
+      
+      #sidebar-main{
+        display: none;
+        width: 15vw;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 89vh;
+        box-shadow: 0px 2px 1px rgba(0, 0,0,0.3);
+        overflow: hidden;
+        border-bottom:none;
+        position: fixed;
+        top: 5em;
+        z-index: 2;
+        padding: 0px;
+      }
+      .slide-content{
+        display: flex;
+        flex-wrap: wrap;
+      }
+      #sidebar-upper{
+        display: flex;
+        flex-direction: column;
+        align-self: flex-start;
+        width: 100%;
+      
+      }
+      .btns-sidebar-main{
+        width: 100%;
+        outline: none;
+        border: 0px;
+        height: 3em;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        padding-left: 1em;
+      }
+      .btns-sidebar-main:hover{
+        background-color: #f0f0f0;
+      }
+      
+      #sidebar-lower{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+      }
+      
+      #main{
+        min-height: 100vh;
+        max-height: max-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 0;
+      }
+      #content-section-main{
+        width: 90vw;
+        height: max-content;
+        position: relative;
+        z-index: 0;
+        top: 8em;
+      }
+      
+      #cards-1-row{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2em;
+        height: max-content;
+        width: 100%;
+        margin: auto;
+      }
+      .cards{
+        width: 15em;
+        height: 10em;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        padding: 4%;
+        overflow: scroll;
+      }
+      
+      .card-body{
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+      
+      }
+      
+      .card-btn{
+        border: 1px solid rgb(135, 34, 242);
+        background-color: white;
+      }
+      
+      .card-body{
+        height: 10em;
+      }
+      
+      #cards-2-row{
+        margin: 5em 0em;
+      }
+      
+      .slide-content{
+        overflow: hidden;
+        border-radius: 25px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      
+      }
+      
+      .card-wrapper{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+      }
+      .card{
+        border-radius: 25px;
+        background-color: #FFF;
+        cursor: pointer;
+        margin: 1.5em 0em;
+        width: 20em;
+      }
+      .image-content,
+      .card-content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 14px;
+        width: 100%;
+      
+      }
+      .image-content{
+        position: relative;
+        row-gap: 5px;
+        padding: 25px 0;
+      }
+      .overlay{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #8722f2;
+        border-radius: 25px 25px 0 25px;
+      }
+      
+      .overlay::after{
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -40px;
+        height: 40px;
+        width: 40px;
+        background-color: #8722f2;
+      }
+      .overlay::after{
+        border-radius: 0 25px 0 0;
+        background-color: #FFF;
+      }
+      .card-image{
+        position: relative;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        padding: 3px;
+      }
+      .card-image .card-img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #4070F4;
+      }
+      .name{
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+      }
+      .description{
+        font-size: 14px;
+        color: #707070;
+        text-align: center;
+      }
+      .button{
+        border: none;
+        font-size: 16px;
+        color: #FFF;
+        padding: 8px 16px;
+        background-color: #4070F4;
+        border-radius: 6px;
+        margin: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .button:hover{
+        background: #265DF2;
+      }
+      .swiper-navBtn{
+        color: #6E93f7;
+        transition: color 0.3s ease;
+      }
+      .swiper-navBtn:hover{
+        color: #4070F4;
+      }
+      .swiper-navBtn::before,
+      .swiper-navBtn::after{
+        font-size: 35px;
+      }
+      .swiper-button-next{
+        right: 0;
+      }
+      .swiper-button-prev{
+        left: 0;
+      }
+      .swiper-pagination-bullet{
+        background-color: #6E93f7;
+        opacity: 1;
+      }
+      .swiper-pagination-bullet-active{
+        background-color: #4070F4;
+      }
+      @media screen and (max-width: 768px) {
+        .slide-content{
+          margin: 0 10px;
+        }
+        .swiper-navBtn{
+          display: none;
+        }
+      }
+      
+      #cards-3-row{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        overflow: hidden;
+      }
+      #cards-3-row>h4{
+        width: 100%;
+        padding: 1em;
+        border-radius: 10px;
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+      }
+      
+      #main-first-section{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: max-content;
+        margin-top: 5em;
+        
+      }
+      
+      #main-gif-video-first-section{
+        height: 100%;
+      
+        width: auto;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      #main-gif-image-first-section{
+        height: 100%;
+        width: 100%;   
+      }
+      #main-gif-first-section-text{
+        width: auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        height: 20em;
+      }
+      #main-gif-first-section-text>h1{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 2px;
+      
+      }
+      #main-gif-first-section-text>p{
+        font-family: "Bebas Neue";
+        letter-spacing: 2px;
+        color: rgb(82, 82, 82);
+      }
+      
+      footer{
+        width: 100%;
+        margin: 5em auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      #footer-links-container{
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .links-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+      }
+      .footer-links-container{
+        display: flex;
+        flex-direction: column;
+      
+      }
+      .links-section>h4{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 3px;
+      }
+      .footer-links-container>a{
+        text-decoration: none;
+        color: black;
+        font-family: serif;
+        font-weight: 400;
+        font-style: normal;
+        margin-top: 1em;
+      }
+      .footer-links-container>a:hover{
+        text-decoration: underline;
+      }
+      #footer-social-links-container{
+        margin-top: 5em;
+        width: 16em;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .footer-social-links{
+        padding: 4%;
+        transition: 100ms linear;
+        border-radius: 10px;
+      }
+      .footer-social-links:hover{
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+        transition: 100ms linear;
+      }
+      
+      }
+      
+</style>
+
+
+<body>
+
+    <!-- HEADER -->
+
+    <header id="header">
+      <nav id="navbar">
+  
+          <div id="logo-container" onclick="window.location.href='{% url 'quizapplication:landingpage' %}'">
+              <figure>
+                <img src="{% static 'images/logo.jpg' %}" alt="Logo_img">              </figure>
+          </div>
+  
+          <div id="searchbar-container">
+              <form class="d-flex search-form-navbar" role="search" method="GET" action="{% url 'quizapplication:quiz_search' %}">
+                  <!-- 'q' is the name we will look up in Django code -->
+                  <input class="form-control me-2 input-search" type="search" name="q" placeholder="Search for quizzes..." aria-label="Search">
+                  <button class="search-btn" type="submit">Search</button>
+                  <button class="search-btn-small-screen" type="submit">
+                    <i class="bi bi-search"></i>
+                  </button>
+                </form>
+                
+          </div>
+  
+          <div id="buttons-container">
+            <!-- Option 1: Using a direct link instead of onclick -->
+            <a href="{% url 'quizapplication:quiz_search' %}?q=" class="btn btn-secondary">View Quizzes</a>
+            <!-- Profile Section -->
+            <span id="profile-section">
+                <a  style="display: block;" href="{% url 'quizapplication:profilepage' %}">
+                    <figure style="margin: 0;">
+                        <img src="{% static 'images/logo.jpg' %}" alt="Logo_img">              </figure>
+                    </figure>
+                </a>
+            </span>
+        </div>
+  
+          <div class="dropdown">
+    <button class="btn dropdown-toggle" id="dropdown-profile-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{% static 'images/logo.jpg' %}" alt="Logo_img">              </figure>
+    </a>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">My Profile</a></li>
+      <li><a class="dropdown-item" href="#">Play Quizzes</a></li>
+      <li><a class="dropdown-item" href="#">View Quizzes</a></li>
+    </ul>
+  </div>
+  
+      </nav>
+
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" id="dropdown-profile-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="/static/logo.jpg" alt="profile-icon">
+        </a>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="profile">My Profile</a></li>
+          <li><a class="dropdown-item" href="quiz_list_pages">Play Quizzes</a></li>
+          <li><a class="dropdown-item" href="quizzes">View Quizzes</a></li>
+        </ul>
+      </div>
+
+  </header>
+
+    <main>
+        <!-- SIDEBAR -->
+        <section id="sidebar-main">
+
+
+          <div class="col w-full" id="sidebar-main-child-1">
+
+            <div class="col-4 w-full" id="sidebar-main-child-2">
+
+              <div class="list-group w-full" id="list-example">
+
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:category_list' %}">Categories</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:category_list' %}">Topics</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:category_list' %}">Quizzes</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'learnify:search_topic'%}">learning</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:user_progress'%}">Progress</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:user_activity' %}">Your Quiz Activity</a>
+                <a class="list-group-item list-group-item-action btns-sidebar-main" href="{% url 'quizapplication:profilepage' %}">Settings</a>
+              </div>
+
+            </div>
+
+          </div>
+  
+      </section>
+        <!-- CONTENT -->
+        <section id="content-section-main">
+            {% block content %}
+            <!-- Page-specific content will go here -->
+            {% endblock %}
+
+
+
+            <!-- <footer id="footer">
+                <div id="footer-links-container">
+                  <span class="links-section">
+                    <h4>Popular Templates</h4>
+                    <span class="footer-links-container">
+                      <a href="#" onclick="alert('This Option will be available Soon!')">Best Quizzes</a>
+                      <a href="#" onclick="alert('This Option will be available Soon!')">All Templates</a>
+                      <a href="#" onclick="alert('This Option will be available Soon!')">Overview</a>
+                    </span>
+                  </span>
+        
+                  <span class="links-section">
+                    <h4>Resources</h4>
+                    <span class="footer-links-container">
+                      <a href="#" onclick="alert('This Option will be available Soon!')">Blog</a>
+                      <a href="#" onclick="alert('This Option will be available Soon!')">Resource center</a>
+                      <a href="#" onclick="alert('This Option will be available Soon!')">Support</a>
+                    </span>
+                  </span>
+        
+                  <span class="links-section">
+                    <h4>About</h4>
+                    <span class="footer-links-container">
+                      <a href="#" onclick="alert('This Option will be available Soon!')">How to play Quiz</a>
+                      <a href="#" onclick="window.location.href='#'">Log in</a>
+                      <a href="#" onclick="window.location.href='#'">Sign up</a>
+                    </span>
+                  </span>
+                </div>
+        
+                <span id="footer-social-links-container">
+                  <span class="footer-social-links" onclick="alert('Currently Unavailable!')"><i
+                      class="fa-brands fa-linkedin fa-lg"></i></span>
+                  <span class="footer-social-links" onclick="alert('Currently Unavailable!')"><i
+                      class="fa-brands fa-youtube fa-lg"></i></span>
+                  <span class="footer-social-links" onclick="alert('Currently Unavailable!')"><i
+                      class="fa-brands fa-instagram fa-lg"></i></span>
+                  <span class="footer-social-links" onclick="alert('Currently Unavailable!')"><i
+                      class="fa-brands fa-facebook fa-lg"></i></span>
+                  <span class="footer-social-links" onclick="alert('Currently Unavailable!')"><i
+                      class="fa-brands fa-x-twitter fa-lg"></i></span>
+                </span>
+        
+              </footer> -->
+
+
+        </section>
+    </main>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.slide-container', {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            0: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+        },
+    });
+</script>
+
+</body>
+
+
+
+
+
+</html>

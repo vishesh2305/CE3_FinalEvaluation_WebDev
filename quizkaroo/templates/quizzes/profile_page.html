@@ -1,0 +1,767 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quizz Karoo - Profile Page{% endblock %}
+
+{% block content %}
+
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        text-decoration: none;
+    }
+    
+    html{
+        min-width: 100vw;
+      }
+    
+    
+    @media (min-width: 1000px) {
+    
+    body{
+        width: 100vw;
+    }
+    ::-webkit-scrollbar{
+        display: none;
+    }
+    
+    main{
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        padding-bottom: 2em;
+    }
+    
+    #my-account-title-container{
+        width: 100%;
+        padding: 10px 0px;
+        display: flex;
+        align-items: center;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+    }
+    #my-account-title{
+        font-size: 2em;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+        margin-left: 2em;
+        margin-top: 0.5em;
+    }
+    
+    #main-account-content-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 2em;
+    }
+    #account-details-section, #profile-details-section, #linked-accounts-section, #my-created-surveys-section{
+        padding: 1em;
+        width: 50vw;
+    }
+    #account-details-title, #profile-details-title, #linked-accounts-title, #my-created-surveys-title{
+        width: max-content;
+        font-size: 2em;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+    }
+    #account-details-content-container, #profile-details-content-container, #linked-accounts-content-container, #my-surveys-content-container{
+        height: max-content;
+        width: 100%;
+        margin-top: 1em;
+        padding: 2em;
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    }
+    #profile-details-content-container{
+        display: flex;
+    }
+    #account-plan-details{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    #account-plan-features>h6{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+        color: gray;
+    }
+    #account-plan-features>p{
+        /* font-family: serif; */
+        font-weight: 500;
+    }
+    
+    #account-plan-upgrade-btn>button{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+    }
+    #account-plan-upgrade-btn>button:hover{
+        background-color:  #8622f2b8;
+    }
+    
+    #logout-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 10vw;
+        margin-top: 1em;
+    }
+    #logout-btn:hover{
+        background-color:  #8622f2b8;
+    }
+    
+    #my-surveys-content-container>p{
+        font-weight: 500;
+    
+    }
+    
+    #my-surveys-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+    }
+    #my-surveys-btn:hover{
+        background-color:  #8622f2b8;
+    }
+    
+    #username_password-profile-details-content-container{
+        width: 100%;
+        height: max-content;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    #username-container, #password-container, #email-container{
+        width: 100%;
+        margin: 1em;
+    }
+    #username-container>label, #password-container>label, #email-container>label{
+    cursor: pointer;
+    }
+    #edit-btn-profile-details-container{
+        width: 10vw;
+        align-self: flex-end;
+    }
+    #profile-details-edit-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 100%;
+    }
+    #save-profile-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 100%;
+    }
+    #profile-details-edit-btn:hover{
+        background-color: #8622f2b8;
+    }
+    
+    #linked-accounts{
+        /* padding: 1em; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .linked-accounts-name-container{
+        margin: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+    .linked-accounts-name-container>label{
+        font-weight: 600;
+    }
+    .linked-accounts-name-container>a{
+        font-weight: 400;
+        cursor: pointer;
+    }
+    
+    
+    
+    
+    #aside-section{
+        display: none;
+        align-self: center;
+        height: 70vh;
+        width: 25vw;
+        z-index: 999;
+        position: absolute;
+        right: 0;
+        top: 12em;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        transition: 200ms linear;
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+        padding: 1em 0em 1em 1em;
+        background-color: white;
+        background: rgb(255,255,255);
+        transition: 200ms linear;
+    }
+    
+    #send-message-box{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: rgba(196, 196, 196, 0.834);
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        padding: 1em;
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.24);
+    }
+    #message-icon-container{
+        margin-right: 1em;
+    }
+    #thumbs-up-icon{
+        color: black;
+        cursor: pointer;
+    }
+    #search-help-container{
+        display: flex;
+        flex-direction: column;
+        margin-top: 1em;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        padding: 2em;
+        background-color: rgba(196, 196, 196, 0.834);
+        height: 22em;
+        overflow-y: scroll;
+    
+    }
+    #search-input{
+        padding: 0.5em;
+        width: 100%;
+        outline: none;
+        border: 0px;
+        border-radius: 10px;
+        background-color: rgb(226, 226, 226);
+        padding-left: 1em;
+    }
+    
+    input[type="search"]::-webkit-search-cancel-button {
+        display: none;
+    }
+    
+    input[type="search"]::-moz-search-clear-button {
+        display: none;
+    }
+    
+    input[type="search"]::-ms-clear {
+        display: none;
+    }
+    
+    #search-help-text-container{
+        margin-bottom: 1em;
+    }
+    
+    #search-results-container{
+        margin-top: 1em;
+        padding: 1em 0em;
+    }
+    
+    .search-results-box{
+        border: 0.5px solid rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        margin-bottom: 1em;
+        width: 100%;
+        padding: 0.5em;
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+    
+    
+    .answer-box {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        display: none; /* Initially hidden */
+    }
+    
+    }
+    
+    
+    @media (max-width: 999px) {
+    
+        
+    html{
+        overflow-x: hidden;
+      
+      
+      }
+        
+      body{
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar{
+        display: none;
+      }
+    
+    
+        
+    header{
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100%;
+        background-color: white;
+        z-index: 2;
+        position: fixed;
+      }
+      #navbar{
+        width: 100%;
+        height: 5em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 0px 2px rgba(0, 0,0,0.3);
+        padding: 0em 2em;
+      
+      }
+      #logo-container{
+        /* margin: 0em 1.5em; */
+        /* border-radius: 50%; */
+        height: 90%;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      
+      #logo-container>figure{
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      
+      }
+      #logo-container>figure>img{
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-top: 10px;
+        object-fit: contain;
+      }
+      
+      
+      #searchbar-container{
+        width: 60%;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+        border-radius: 8px;
+      }
+      
+      .search-btn{
+        border: 1px solid rgb(135, 34, 242);
+        background-color: white;
+        display: none; /* Hidden for small Screens */
+      }
+      .search-btn:hover{
+        background-color: #8722f2;
+        transition: 100ms linear;
+        color: white;
+      }
+      
+      
+      
+      .search-btn-small-screen{
+        border: 0px;
+        background-color: white;
+        color: #8722f2;
+        border-radius: 50%;
+        padding: 0.5em;
+      
+      }
+    
+    
+      
+      
+      
+      #buttons-container{
+        display: none;
+      
+      }
+      #profile-section{
+        margin: 0em 1.5em;
+        border-radius: 50%;
+        height: 4em;
+        width: 4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      
+      }
+      
+      #profile-section>a>figure>img{
+        height: 100%;
+        width: 100%;
+      }
+      
+    
+    
+      main{
+        position: relative;
+        top: 5em;
+        width: 100%;
+        padding-bottom: 10em;
+      }
+    
+      #my-account-title-container{
+        width: 100%;
+        /* padding: 10px 0px; */
+        display: flex;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+    }
+    #my-account-title{
+        font-size: 2em;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+        margin-left: 2em;
+        margin-top: 0.5em;
+    }
+    
+    #main-account-content-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 2em;
+    }
+    #account-details-section, #profile-details-section, #linked-accounts-section, #my-created-surveys-section{
+        padding: 1em;
+        width: 80vw;
+    }
+    #account-details-title, #profile-details-title, #linked-accounts-title, #my-created-surveys-title{
+        width: max-content;
+        font-size: 2em;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+    }
+    #account-details-content-container, #profile-details-content-container, #linked-accounts-content-container, #my-surveys-content-container{
+        height: max-content;
+        width: 100%;
+        margin-top: 1em;
+        padding: 2em;
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    }
+    #profile-details-content-container{
+        display: flex;
+        flex-direction: column;
+    }
+    #account-plan-details{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    
+    
+    #account-plan-features>h6{
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 5px;
+        color: gray;
+    }
+    #account-plan-features>p{
+        /* font-family: serif; */
+        font-weight: 500;
+    }
+    
+    #account-plan-upgrade-btn>button{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+    }
+    #account-plan-upgrade-btn>button:hover{
+        background-color:  #8622f2b8;
+    }
+    
+    #logout-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 10em;
+        margin-top: 1em;
+    }
+    #logout-btn:hover{
+        background-color:  #8622f2b8;
+    }
+    
+      
+    
+    #my-surveys-content-container>p{
+        font-weight: 500;
+    
+    }
+    
+    #my-surveys-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+    }
+    #my-surveys-btn:hover{
+        background-color:  #8622f2b8;
+    }
+    
+    #username_password-profile-details-content-container{
+        width: 100%;
+        height: max-content;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    #username-container, #password-container, #email-container{
+        width: 100%;
+        margin: 1em;
+        overflow: scroll;
+        text-wrap: break-word;
+    }
+    #username-container>label, #password-container>label, #email-container>label{
+    cursor: pointer;
+    }
+    #edit-btn-profile-details-container{
+        width: 50%;
+        align-self: center;
+    }
+    #profile-details-edit-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 1em;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 100%;
+    }
+    #save-profile-btn{
+        background-color: #8722f2;
+        color: white;
+        outline: none;
+        border: 0px;
+        padding: 10px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 4px;
+        width: 100%;
+    }
+    #profile-details-edit-btn:hover{
+        background-color: #8622f2b8;
+    }
+      
+    
+    
+    #linked-accounts{
+        /* padding: 1em; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .linked-accounts-name-container{
+        margin: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+    .linked-accounts-name-container>label{
+        font-weight: 600;
+    }
+    .linked-accounts-name-container>a{
+        font-weight: 400;
+        cursor: pointer;
+    }
+    
+    
+    #aside-section{
+        display: none;
+    }
+      
+    
+    
+    }
+</style>
+
+<main>
+    <span id="my-account-title-container">
+        <h1 id="my-account-title">My Account</h1>
+    </span>
+
+    <section id="main-account-content-container">
+        <span id="account-details-section">
+            <h2 id="account-details-title">Account Details</h2>
+            <div id="account-details-content-container">
+                <span id="account-plan-details">
+                    <span id="account-plan-features">
+                        <h6>Plan</h6>
+                        <p id="account-plan-name">Basic</p>
+                        <p id="account-plan-information">
+                            Only fill existing Quizzes, Can't Create Self Quizzes.
+                        </p>
+                    </span>
+                    <span id="account-plan-upgrade-btn">
+                        <button id="account-plan-upgrade-btn" onclick="alert('Available Soon!')">
+                            Upgrade Plan
+                        </button>
+                    </span>
+                </span>
+            </div>
+        </span>
+
+        <span id="profile-details-section">
+            <h2 id="profile-details-title">Profile</h2>
+            <form action="{% url 'quizapplication:profilepage' %}" method="POST">
+                {% csrf_token %}
+                <div id="profile-details-content-container">
+                    <span id="username_password-profile-details-content-container">
+                        <span id="username-container">
+                            <label for="username">Name</label>
+                            <h6 id="username-text" name="username">{{ user.username }}</h6>
+                            <input type="text" id="username-input" name="username" value="{{ user.username }}" style="display:none;">
+                        </span>
+                        <span id="password-container">
+                            <label for="password">Password (Hashed)</label>
+                            <h6 name="password" id="password-text">[Hidden for security]</h6>
+                        </span>
+                        <span id="email-container">
+                            <label for="email">Email</label>
+                            <h6 id="email-text" name="email">{{ user.email }}</h6>
+                        </span>
+                    </span>
+                    <span id="edit-btn-profile-details-container">
+                        <button id="profile-details-edit-btn" type="button" onclick="enableEdit()">Edit</button>
+                        <button id="save-profile-btn" type="submit" style="display:none;">Save</button>
+                    </span>
+                </div>
+            </form>
+        </span>
+
+        <span id="linked-accounts-section">
+            <h2 id="linked-accounts-title">Linked Accounts</h2>
+            <div id="linked-accounts-content-container">
+                <span id="linked-accounts">
+                    <span class="linked-accounts-name-container">
+                        <label for="username">Apple</label>
+                        <a id="apple-id" class="connect-social-accounts" name="username">Link account</a>
+                    </span>
+                    <span class="linked-accounts-name-container">
+                        <label for="username">Google</label>
+                        <a id="google-id" class="connect-social-accounts" name="username">vishesh@gmail.com</a>
+                    </span>
+                    <span class="linked-accounts-name-container">
+                        <label for="username">Linkedin</label>
+                        <a id="linkedin-id" class="connect-social-accounts" name="username">Link account</a>
+                    </span>
+                    <span class="linked-accounts-name-container">
+                        <label for="username">Facebook</label>
+                        <a id="facebook-id" class="connect-social-accounts" name="username">Link account</a>
+                    </span>
+                </span>
+            </div>
+        </span>
+
+        <span id="my-created-surveys-section">
+            <h2 id="my-created-surveys-title">My Quizzes</h2>
+            <div id="my-surveys-content-container">
+                <p>Check Your Quizzes</p>
+                <button id="my-surveys-btn" onclick="window.location.href='{% url 'quizapplication:my_quizzes' %}'">
+                    Click Here!
+                </button>
+            </div>
+        </span>
+
+        <!-- Logout Button -->
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button id="logout-btn" type="submit">Logout</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    function enableEdit() {
+        document.getElementById('username-text').style.display = 'none';
+        document.getElementById('username-input').style.display = 'block';
+        document.getElementById('profile-details-edit-btn').style.display = 'none';
+        document.getElementById('save-profile-btn').style.display = 'inline-block';
+    }
+</script>
+{% endblock %}

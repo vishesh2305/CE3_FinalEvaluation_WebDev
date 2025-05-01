@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Your Quiz Activity</h1>
+    <ul>
+        {% for activity in activities %}
+            <li>
+                {{ activity.quiz.title }} - Started: {{ activity.start_time }}
+                {% if activity.completed %}
+                    - Completed: {{ activity.completion_time }}
+                {% else %}
+                    - In Progress
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result - {{ topic }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            margin: 2em;
+            padding: 2em;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-family: "Bebas Neue", serif;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        a {
+            padding: 10px 15px;
+            background-color: #8722f2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #6a1ab8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Topic: {{ topic }}</h1>
+    <p>{{ result }}</p>
+    <div>
+        <a href="{% url 'learnify:learn_more' %}">Learn More</a>
+        <a href="{% url 'quizapplication:landingpage' %}">Create Quiz</a>
+    </div>
+</body>
+</html>

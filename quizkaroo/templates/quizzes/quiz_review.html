@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Review{% endblock %}
+
+{% block content %}
+<style>
+    .search-btn{
+        padding: 10px;
+        text-decoration: none;
+        margin-top: 1em;
+    }
+    #shareresults-div{
+        margin-top: 1em;
+        height: 10em;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+</style>
+    <div class="container mt-4">
+        <h1>Quiz Review</h1>
+        {% for item in review_data %}
+            <div class="mb-4">
+                <h2>{{ item.question.text }}</h2>
+                <ul class="list-group">
+                    {% for answer in item.answers %}
+                        <li class="list-group-item">
+                            {{ answer.text }}
+                            {% if item.question.question_type == 'SC' %}
+                                {% if item.user_answer|stringformat:'i' == answer.id|stringformat:'i' %}
+                                    <span class="badge bg-primary">Your Answer</span>
+                                {% endif %}
+                                {% if item.correct_answer|stringformat:'i' == answer.id|stringformat:'i' %}
+                                    <span class="badge bg-success">Correct Answer</span>
+                                {% endif %}
+                            {% else %}
+                                {% if answer.id|stringformat:'i' in item.user_answer|stringformat:'s' %}
+                                    <span class="badge bg-primary">Your Answer</span>
+                                {% endif %}
+                                {% if answer.id|stringformat:'i' in item.correct_answer|stringformat:'s' %}
+                                    <span class="badge bg-success">Correct Answer</span>
+                                {% endif %}
+                            {% endif %}
+                            {% if item.question.question_type == 'MC' %}
+                                {% if answer.is_correct and answer.id|stringformat:'i' not in item.user_answer|stringformat:'s' %}
+                                    <span class="badge bg-info">Correct Answer (Not Selected)</span>
+                                {% endif %}
+                            {% else %}
+                                {% if item.correct_answer|stringformat:'i' == answer.id|stringformat:'i' and item.user_answer|stringformat:'i' != answer.id|stringformat:'i' %}
+                                    {% if item.user_answer %}
+                                        <span class="badge bg-info">Correct Answer (Not Selected)</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Correct Answer</span>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        {% if request.session.share_info %}
+            <div id="shareresults-div">
+                <h2>Share Your Results!</h2>
+                <a class="search-btn" href="https://twitter.com/intent/tweet?url={{ request.session.share_info.url }}&text={{ request.session.share_info.text|urlencode }}" target="_blank">Share on Twitter</a>
+                <a class="search-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ request.session.share_info.url }}" target="_blank">Share on Facebook</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

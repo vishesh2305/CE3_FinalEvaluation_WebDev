@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Learnify - Result</title></head>
+<body>
+    <h2>Topic Explanation</h2>
+    <p>{{ content }}</p>
+    <form action="{% url 'learn_more' %}" method="get">
+        <button type="submit">Learn More</button>
+    </form>
+    <form action="{% url 'create_quiz' %}" method="get">
+        <button type="submit">Create Quiz</button>
+    </form>
+</body>
+</html>
