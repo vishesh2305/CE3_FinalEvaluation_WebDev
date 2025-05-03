@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load socialaccount %} {% load i18n %} {% block title %}Login{% endblock %}
+
+{% block content %}
+<h1>{% trans "Sign In" %}</h1>
+
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {{ form.as_p }} {# Render the login form fields as paragraphs #}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit">{% trans "Sign In" %}</button>
+    <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+</form>
+
+<hr>
+<h2>Or Login With:</h2>
+{% get_providers as socialaccount_providers %} {# Get list of configured providers #}
+
+{% if socialaccount_providers %}
+<ul class="socialaccount_providers">
+    {% for provider in socialaccount_providers %}
+        {% if provider.id == "google" %}
+        <li>
+            <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
+               href="{% provider_login_url provider.id process='login' %}">Login with Google</a>
+               {# You can add an icon/button styling here later #}
+        </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% else %}
+<p>{% blocktrans %}If you want to login with Google, please contact the site administrator.{% endblocktrans %}</p>
+{% endif %}
+
+{% endblock %}

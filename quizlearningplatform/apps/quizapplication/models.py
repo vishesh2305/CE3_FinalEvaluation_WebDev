@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.conf import settings
 from django.utils import timezone
+from django.db.models import UniqueConstraint
 
 
 class Category(models.Model):
@@ -124,3 +125,50 @@ class UserAnswer(models.Model):
         correct_answers = set(self.question.answers.filter(is_correct=True))
         selected_answers_set = set(self.selected_answers.all())
         return correct_answers == selected_answers_set
+    
+
+
+
+class QuizChallenge(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # Unique ID for joining
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='challenges')
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_challenges')
+    start_time = models.DateTimeField(help_text="Scheduled start time for the challenge")
+    end_time = models.DateTimeField(help_text="Scheduled end time for the challenge")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    max_players = models.PositiveIntegerField(null=True, blank=True, help_text="Optional limit on the number of participants")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-start_time']
+
+    def __str__(self):
+        return f"Challenge for '{self.quiz.title}' by {self.creator.username}"
+    
+
+
+class ChallengeParticipant(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    challenge = models.ForeignKey(QuizChallenge, on_delete=models.CASCADE, related_name='participants')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='challenge_participations')
+    join_time = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(null=True, blank=True)
+    rank = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['challenge', '-score', 'join_time'] # Order by challenge, then score (desc), then join time
+        constraints = [
+            UniqueConstraint(fields=['challenge', 'user'], name='unique_participant_per_challenge')
+        ]
+
+    def __str__(self):
+        return f"{self.user.username} participating in {self.challenge.id}"
+    
+
+

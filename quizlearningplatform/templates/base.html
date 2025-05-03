@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quiz & Learning Platform{% endblock %}</title>
+    {% load static %} </head>
+<body>
+    <nav>
+        <a href="/">Home</a> |
+        {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">Logout</a> |
+            <a href="#">Profile</a> {% else %}
+            <a href="{% url 'account_login' %}">Login</a> |
+            <a href="{% url 'account_signup' %}">Sign Up</a>
+        {% endif %}
+    </nav>
+
+    <hr>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <hr>
+
+    <footer>
+        <p>&copy; {% now "Y" %} Quiz & Learning Platform</p>
+    </footer>
+
+    </body>
+</html>

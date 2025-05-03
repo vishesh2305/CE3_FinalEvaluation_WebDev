@@ -27,7 +27,12 @@ class User(AbstractUser):
     education_bg = models.ManyToManyField('EducationBackground', blank=True ,related_name='users_with_this_bg')
     learning_level = models.OneToOneField('LearningLevel', on_delete=models.CASCADE, null=True, blank=True, related_name='users_with_this_level')
     friends = models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='friend_of')
-
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False, # Crucial: Following is not necessarily mutual
+        related_name='followers',
+        blank=True
+    )
 
     def __str__(self):
         return self.username

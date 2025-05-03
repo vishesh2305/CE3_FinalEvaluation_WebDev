@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def quizpage():
+    return f"This is Quiz Application"
