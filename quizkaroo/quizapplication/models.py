@@ -26,6 +26,7 @@ class Quiz(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     passing_score = models.PositiveIntegerField(default=50)
     is_dynamic = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_quizzes', null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -39,8 +40,8 @@ class Question(models.Model):
     ]
 
     quiz = models.ForeignKey(Quiz, related_name='questions', on_delete=models.CASCADE)
-    text = models.TextField()
-    question_type = models.CharField(max_length=2, choices=QUESTION_TYPE_CHOICES, default=SINGLE_CHOICE)
+    text = models.TextField(null=True, blank=True)
+    question_type = models.CharField(max_length=2, choices=QUESTION_TYPE_CHOICES)
     order = models.PositiveIntegerField()
 
     class Meta:

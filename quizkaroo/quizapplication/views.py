@@ -1,4 +1,5 @@
 import logging
+import requests
 logging.basicConfig(level=logging.INFO)  # Adjusted logging level for production
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,11 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from .forms import SignupForm, UserProfileForm
+
+
+
+FLASK_API_URL = 'http://127.0.0.1:5000'
+
 
 User = get_user_model()
 
@@ -326,8 +332,20 @@ class QuizSearchView(ListView):
 
         return queryset
 
+@login_required
 def my_quizzes(request):
-    return render(request, 'quizzes/my_quizzes.html')
+    try:
+        headers = {'Content-Type': 'application/json', 'X-User-Id': str(request.user.id)}
+        response = requests.get(f'{FLASK_API_URL}/quizzes', headers=headers)
+        response.raise_for_status()
+        quizzes_data = response.json()
+        my_quizzes = [quiz for quiz in quizzes_data if quiz.get('created_by_id') == request.user.id]
+        logger.debug(f"My quizzes data: {my_quizzes}")
+        return render(request, 'quizzes/my_quizzes.html', {'quizzes': my_quizzes})
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching quizzes: {e}")
+        messages.error(request, f"Could not retrieve quizzes: {e}")
+        return render(request, 'quizzes/my_quizzes.html', {'quizzes': []})
 
 def logout_view(request):
     logout(request)
@@ -388,3 +406,177 @@ def quiz_review(request):
 def user_activity(request):
     activities = UserQuizActivity.objects.filter(user=request.user).order_by('-start_time')
     return render(request, 'quizzes/user_activity.html', {'activities': activities})
+
+
+
+
+@login_required
+def update_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+    if request.method == 'POST':
+        logger.debug(f"Received POST request to update quiz {quiz_id}")
+        logger.debug(f"Request POST data: {request.POST}")  # Log the entire POST data
+
+        quiz_data = {
+            'title': request.POST.get('title'),
+            'description': request.POST.get('description'),
+            'passing_score': request.POST.get('passing_score'),
+            'is_dynamic': request.POST.get('is_dynamic'),
+            'questions': []
+        }
+        num_questions = int(request.POST.get('num_questions', 1))
+        logger.debug(f"Number of questions from request: {num_questions}")
+
+        for i in range(1, num_questions + 1):
+            question_data = {
+                'text': request.POST.get(f'question_{i}_text'),
+                'question_type': request.POST.get(f'question_{i}_type'),
+                'order': i,
+                'answers': []
+            }
+            for j in range(1, 5):
+                answer_data = {
+                    'text': request.POST.get(f'question_{i}_answer_{j}_text'),
+                    'is_correct': request.POST.get(f'question_{i}_answer_{j}_correct') == 'on'
+                }
+                question_data['answers'].append(answer_data)
+            quiz_data['questions'].append(question_data)
+        logger.debug(f"Constructed quiz_data to send to Flask: {json.dumps(quiz_data, indent=2)}")
+
+        try:
+            headers = {'Content-Type': 'application/json', 'X-User-Id': str(request.user.id)}
+            response = requests.put(f'{FLASK_API_URL}/quizzes/{quiz_id}', data=json.dumps(quiz_data), headers=headers)
+            response.raise_for_status()
+            logger.debug(f"Flask API response: Status Code: {response.status_code}, Content: {response.text}")
+            messages.success(request, "Quiz updated successfully!")
+            return redirect(reverse('quizapplication:quiz_detail', kwargs={'pk': quiz_id}))
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error updating quiz: {e}")
+            if e.response:
+                logger.error(f"Flask response details: {e.response.status_code}, {e.response.text}")
+            messages.error(request, f"Failed to update quiz: {e}")
+            return render(request, 'quizzes/quiz_update.html', {'quiz': quiz})
+    else:
+        try:
+            flask_response = requests.get(f'{FLASK_API_URL}/quizzes/{quiz_id}')
+            flask_response.raise_for_status()
+            quiz_data = flask_response.json()
+            logger.debug(f"Fetched quiz data from Flask for editing: {json.dumps(quiz_data, indent=2)}")
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Could not fetch quiz data from Flask: {e}. Using Django data.")
+            quiz_data = {
+                'title': quiz.title,
+                'description': quiz.description,
+                'questions': [{
+                    'text': q.text,
+                    'question_type': q.question_type,
+                    'order': q.order,
+                    'answers': [{'text': a.text, 'is_correct': a.is_correct} for a in q.answers.all()]
+                } for q in quiz.questions.all()]
+            }
+        return render(request, 'quizzes/quiz_update.html', {'quiz': quiz, 'quiz_data': quiz_data})
+
+
+
+@login_required
+def delete_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, pk=quiz_id)  # Fetch the quiz object
+    if request.method == 'POST':
+        try:
+            headers = {'Content-Type': 'application/json', 'X-User-Id': str(request.user.id)}
+            response = requests.delete(f'{FLASK_API_URL}/quizzes/{quiz_id}', headers=headers)
+            response.raise_for_status()
+            messages.success(request, "Quiz deleted successfully!")
+            return redirect(reverse('quizapplication:quiz_list', kwargs={'topic_id': quiz.topic.id}))  # Use quiz.topic.id
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error deleting quiz: {e}")
+            messages.error(request, f"Failed to delete quiz: {e}")
+            return redirect(reverse('quizapplication:quiz_detail', kwargs={'pk': quiz_id}))
+    else:
+        return render(request, 'quizzes/quiz_delete_confirm.html', {'quiz': quiz})  # Pass the quiz object
+
+
+
+
+
+@login_required
+def create_manual_quiz_from_django(request):
+    if request.method == 'POST':
+        logger.info("Manual quiz creation started.")
+        quiz_data = {
+            'title': request.POST.get('title'),
+            'description': request.POST.get('description'),
+            'questions_data': []
+        }
+        logger.info(f"Quiz data from form: {quiz_data}")
+        num_questions = int(request.POST.get('num_questions', 1))
+        logger.info(f"Number of questions: {num_questions}")
+
+        for question_number in range(1, num_questions + 1):
+            question_text = request.POST.get(f'question_{question_number}_text')
+            if not question_text:
+                logger.warning(f"Question {question_number} text is empty, skipping.")
+                continue
+            question_data = {
+                'text': question_text,
+                'question_type': request.POST.get(f'question_{question_number}_type', 'SC'),
+                'order': question_number,
+                'answers': []
+            }
+            logger.info(f"Question data: {question_data}")
+            for answer_number in range(1, 5):
+                answer_text = request.POST.get(f'question_{question_number}_answer_{answer_number}_text')
+                if not answer_text:
+                    logger.warning(f"Answer {answer_number} for question {question_number} is empty, skipping.")
+                    continue
+                is_correct = request.POST.get(f'question_{question_number}_answer_{answer_number}_correct_{question_number}_{answer_number}') == 'on'
+                answer_data = {
+                    'text': answer_text,
+                    'is_correct': is_correct
+                }
+                logger.info(f"Answer data: {answer_data}")
+                question_data['answers'].append(answer_data)
+            quiz_data['questions_data'].append(question_data)
+
+        logger.info(f"Final quiz data to send to Flask: {quiz_data}")
+
+        try:
+            headers = {'Content-Type': 'application/json', 'X-User-Id': str(request.user.id)}  # Send User ID
+            # --- Django DB Saving for Topic (ONLY) ---
+            category, _ = Category.objects.get_or_create(name="Manual Quizzes", defaults={'description': 'Manually created quizzes'})
+            topic, _ = Topic.objects.get_or_create(name="General", category=category)
+
+            # --- Send topic_id to Flask ---
+            quiz_data['topic_id'] = topic.id  # Add topic_id to the data
+            response = requests.post(f'{FLASK_API_URL}/quizzes', data=json.dumps(quiz_data), headers=headers)
+            response.raise_for_status()
+            flask_response_data = response.json()
+            logger.info(f"Flask API response: {flask_response_data}")
+
+            # --- Redirect ---
+            #  Adjust the redirect as needed.  If Flask returns the new quiz's ID,
+            #  you could redirect to the quiz detail page.
+            return redirect(reverse('quizapplication:quiz_list', kwargs={'topic_id': topic.id}))
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error communicating with Flask API: {e}")
+            return render(request, 'quizzes/create_quiz.html', {'error': f'Failed to create quiz: {e}'})
+        except Exception as e:
+            logger.error(f"Error: {e}", exc_info=True)
+            return render(request, 'quizzes/create_quiz.html', {'error': f'Error: {e}'})
+
+    else:
+        return render(request, 'quizzes/create_quiz.html')
+
+
+
+
+
+def my_quizzes(request):
+    user_quizzes = Quiz.objects.filter(
+            # Assuming you have a field like 'created_by' in your Quiz model
+            # that stores the user who created the quiz.
+            # Adjust this filter as needed based on your model.
+    created_by=request.user  
+        )
+    return render(request, 'quizzes/my_quizzes.html', {'quizzes': user_quizzes})

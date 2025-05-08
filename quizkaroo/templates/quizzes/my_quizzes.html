@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}My Created Quizzes{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .quiz-list-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .quiz-list-container h1 {
+        color: #222;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.4em;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+    .quiz-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .quiz-list-item {
+        background-color: #fdfdfd;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-list-item:hover {
+        background-color: #f0f8ff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .quiz-title-link {
+        font-weight: 600;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 1.3em;
+    }
+
+    .quiz-title-link:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+
+    .quiz-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .quiz-actions a,
+    .quiz-actions span {
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .action-edit {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .action-edit:hover {
+        background-color: #e0a800;
+    }
+
+    .action-delete {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .action-delete:hover {
+        background-color: #c82333;
+    }
+
+    .action-delete-invalid {
+        background-color: #e2e3e5;
+        color: #6c757d;
+        font-style: italic;
+        cursor: not-allowed;
+    }
+
+    .no-quizzes-message {
+        text-align: center;
+        font-size: 1.1em;
+        color: #555;
+        margin-top: 40px;
+        padding: 25px;
+        background-color: #eef1f4;
+        border-radius: 10px;
+        border-left: 5px solid #6c757d;
+    }
+
+    @media (max-width: 600px) {
+        .quiz-list-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .quiz-actions {
+            margin-top: 10px;
+            justify-content: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-list-container">
+    <h1>My Created Quizzes</h1>
+
+    {% if quizzes %}
+        <ul class="quiz-list">
+            {% for quiz in quizzes %}
+                <li class="quiz-list-item">
+                    <div>
+                        <a href="{% url 'quizapplication:quiz_detail' pk=quiz.id %}" class="quiz-title-link">{{ quiz.title }}</a>
+                    </div>
+                    <div class="quiz-actions">
+                        <a href="{% url 'quizapplication:update_quiz' quiz_id=quiz.id %}" class="action-edit">Edit</a>
+                        {% if quiz.id %}
+                            <a href="{% url 'quizapplication:quiz_delete' quiz_id=quiz.id %}" class="action-delete">Delete</a>
+                        {% else %}
+                            <span class="action-delete-invalid">Delete (Invalid ID)</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-quizzes-message">You haven't created any quizzes yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

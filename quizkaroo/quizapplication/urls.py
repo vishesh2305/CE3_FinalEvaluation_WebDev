@@ -21,4 +21,7 @@ urlpatterns = [
     path('progress/', views.user_progress, name='user_progress'),
     path('review/', views.quiz_review, name='quiz_review'),
     path('user_activity/', views.user_activity, name='user_activity'),
-]
+    path('quiz/create_manual/', views.create_manual_quiz_from_django, name='create_manual_quiz'),
+    path('quiz/edit/<int:quiz_id>/', views.update_quiz, name='update_quiz'),
+    path('quiz/delete/<int:quiz_id>/', views.delete_quiz, name='quiz_delete'),
+    ]

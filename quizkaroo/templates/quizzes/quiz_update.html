@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <h1>Update Quiz</h1>
+    <form method="post" action="{% url 'quizapplication:update_quiz' quiz_id=quiz.id %}" class="quiz-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="title">Quiz Title:</label>
+            <input type="text" id="title" name="title" value="{{ quiz_data.title }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Quiz Description:</label>
+            <textarea id="description" name="description" rows="4">{{ quiz_data.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="passing_score">Passing Score:</label>
+            <input type="number" id="passing_score" name="passing_score" value="{{ quiz_data.passing_score }}" required>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <label for="is_dynamic">Is Dynamic:</label>
+            <input type="checkbox" id="is_dynamic" name="is_dynamic" {% if quiz_data.is_dynamic %}checked{% endif %}>
+        </div>
+
+        <input type="hidden" name="num_questions" value="{{ quiz_data|length }}">
+
+        <div id="questions-container">
+            {% for question in quiz_data.questions %}
+                <div class="question">
+                    <h3>Question {{ forloop.counter }}</h3>
+                    <input type="hidden" name="question_{{ forloop.counter }}_id" value="{{ question.id }}">
+
+                    <div class="form-group">
+                        <label for="question_{{ forloop.counter }}_text">Text:</label>
+                        <input type="text" id="question_{{ forloop.counter }}_text" name="question_{{ forloop.counter }}_text" value="{{ question.text }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question_{{ forloop.counter }}_type">Type:</label>
+                        <select id="question_{{ forloop.counter }}_type" name="question_{{ forloop.counter }}_type">
+                            <option value="SC" {% if question.question_type == 'SC' %}selected{% endif %}>Single Choice</option>
+                            <option value="MC" {% if question.question_type == 'MC' %}selected{% endif %}>Multiple Choice</option>
+                        </select>
+                    </div>
+
+                    <div class="answers">
+                        <h4>Answers</h4>
+                        {% for answer in question.answers %}
+                            <div class="answer">
+                                <input type="hidden" name="question_{{ forloop.parentloop.counter }}_answer_{{ forloop.counter }}_id" value="{{ answer.id }}">
+                                <div class="form-group">
+                                    <label for="question_{{ forloop.parentloop.counter }}_answer_{{ forloop.counter }}_text">Answer {{ forloop.counter }}:</label>
+                                    <input type="text" id="question_{{ forloop.parentloop.counter }}_answer_{{ forloop.counter }}_text" name="question_{{ forloop.parentloop.counter }}_answer_{{ forloop.counter }}_text" value="{{ answer.text }}" required>
+                                </div>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="question_{{ forloop.parentloop.counter }}_answer_{{ forloop.counter }}_correct" {% if answer.is_correct %}checked{% endif %}> Correct
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-button">Update Quiz</button>
+    </form>
+</div>
+
+<style>
+.quiz-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.quiz-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-left: 10px;
+}
+
+.question {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.question h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.answers {
+    margin-top: 10px;
+}
+
+.answer {
+    margin-bottom: 15px;
+}
+
+.checkbox-inline {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.submit-button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+</style>
+{% endblock %}

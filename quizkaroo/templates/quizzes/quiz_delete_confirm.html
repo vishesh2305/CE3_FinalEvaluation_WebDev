@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Delete Quiz{% endblock %}
+
+{% block content %}
+    <h1>Confirm Delete Quiz</h1>
+    <p>Are you sure you want to delete the quiz "{{ quiz.title }}"?</p>
+    <form action="{% url 'quizapplication:quiz_delete' quiz_id=quiz.id %}" method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to delete this quiz?</p>
+        <button type="submit">Confirm Delete</button>
+    </form>
+{% endblock %}

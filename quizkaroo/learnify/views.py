@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 
 
-GEMINI_API_KEY = 'AIzaSyAMceJOto-kReM1r8HIw7CZC2KZvH7CwdE'
+GEMINI_API_KEY = 'AIzaSyB-DMnNQo2w5ZLM7UHMdVr_v1Mgn_pBagE'
 
 
 def search_topic(request):

@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Manual Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <h1>Create New Quiz</h1>
+    <form method="post" action="{% url 'quizapplication:create_manual_quiz' %}" class="quiz-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="title">Quiz Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Quiz Description:</label>
+            <textarea id="description" name="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="num_questions">Number of Questions:</label>
+            <input type="number" id="num_questions" name="num_questions" value="1" min="1">
+            <button type="button" id="generate_questions">Generate Questions</button>
+        </div>
+
+        <div id="questions-container">
+            <div class="question">
+                <h4>Question 1</h4>
+                <div class="form-group">
+                    <label for="question_1_text">Text:</label>
+                    <input type="text" id="question_1_text" name="question_1_text" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="question_1_type">Type:</label>
+                    <select id="question_1_type" name="question_1_type">
+                        <option value="SC">Single Choice</option>
+                        <option value="MC">Multiple Choice</option>
+                    </select>
+                </div>
+
+                <h5>Answers:</h5>
+                <div class="answers">
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_1_answer_1_text">Answer 1:</label>
+                            <input type="text" id="question_1_answer_1_text" name="question_1_answer_1_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_1_answer_1_correct_1"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_1_answer_2_text">Answer 2:</label>
+                            <input type="text" id="question_1_answer_2_text" name="question_1_answer_2_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_1_answer_2_correct_2"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_1_answer_3_text">Answer 3:</label>
+                            <input type="text" id="question_1_answer_3_text" name="question_1_answer_3_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_1_answer_3_correct_3"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_1_answer_4_text">Answer 4:</label>
+                            <input type="text" id="question_1_answer_4_text" name="question_1_answer_4_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_1_answer_4_correct_4"> Correct</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button">Create Quiz</button>
+    </form>
+</div>
+
+<style>
+    .quiz-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .quiz-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding doesn't affect width */
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    #generate_questions {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .submit-button {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .question {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+    .answers {
+        margin-left: 20px;
+    }
+
+    .answer {
+        margin-bottom: 10px;
+    }
+
+    .answer label {
+        font-weight: normal;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 5px;
+    }
+</style>
+
+<script>
+    const numQuestionsInput = document.getElementById('num_questions');
+    const generateQuestionsButton = document.getElementById('generate_questions');
+    const questionsContainer = document.getElementById('questions-container');
+
+    generateQuestionsButton.addEventListener('click', () => {
+        const numQuestions = parseInt(numQuestionsInput.value, 10);
+        if (numQuestions <= 0) {
+            alert('Number of questions must be at least 1.');
+            return;
+        }
+        questionsContainer.innerHTML = ''; // Clear existing questions
+        for (let i = 1; i <= numQuestions; i++) {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.innerHTML = `
+                <h4>Question ${i}</h4>
+                <div class="form-group">
+                    <label for="question_${i}_text">Text:</label>
+                    <input type="text" id="question_${i}_text" name="question_${i}_text" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="question_${i}_type">Type:</label>
+                    <select id="question_${i}_type" name="question_${i}_type">
+                        <option value="SC">Single Choice</option>
+                        <option value="MC">Multiple Choice</option>
+                    </select>
+                </div>
+
+                <h5>Answers:</h5>
+                <div class="answers">
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_${i}_answer_1_text">Answer 1:</label>
+                            <input type="text" id="question_${i}_answer_1_text" name="question_${i}_answer_1_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_${i}_answer_1_correct_${i}_1"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_${i}_answer_2_text">Answer 2:</label>
+                            <input type="text" id="question_${i}_answer_2_text" name="question_${i}_answer_2_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_${i}_answer_2_correct_${i}_2"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_${i}_answer_3_text">Answer 3:</label>
+                            <input type="text" id="question_${i}_answer_3_text" name="question_${i}_answer_3_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_${i}_answer_3_correct_${i}_3"> Correct</label>
+                    </div>
+                    <div class="answer">
+                        <div class="form-group">
+                            <label for="question_${i}_answer_4_text">Answer 4:</label>
+                            <input type="text" id="question_${i}_answer_4_text" name="question_${i}_answer_4_text" required>
+                        </div>
+                        <label><input type="checkbox" name="question_${i}_answer_4_correct_${i}_4"> Correct</label>
+                    </div>
+                </div>
+            `;
+            questionsContainer.appendChild(questionDiv);
+        }
+    });
+</script>
+{% endblock %}
